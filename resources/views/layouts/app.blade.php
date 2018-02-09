@@ -15,10 +15,7 @@
 </head>
 <body>
     <div id="app">
-        <section id="ScytheApp"></section>
+        @yield('content')
     </div>
-
-    <!-- Scripts -->
-    @getScript(app)
 </body>
 </html>

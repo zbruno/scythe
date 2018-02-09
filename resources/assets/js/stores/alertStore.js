@@ -7,7 +7,7 @@ class AlertStore {
   @observable alerts = [];
 
   @action
-  add(alertText, alertType = 'danger', duration = 4 * SECOND) {
+  add(alertText, alertType = 'Error', duration = 4 * SECOND) {
     const id = `alert__${v4()}`;
     const alert = { id, alertType, duration, alertText };
     this.alerts.push(alert);

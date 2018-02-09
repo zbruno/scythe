@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { css } from 'react-emotion';
 import {
   Button,
   Checkbox,
@@ -12,19 +13,20 @@ import {
 
 const getDefaultPlayer = () => ({
   id: '',
-  raceId: '',
+  factionId: '',
   engineId: '',
+  stars: [],
   popularity: '',
   power: '',
   territories: '',
-  stars: '',
   structures: '',
+  resources: '',
   gold: '',
   combatCards: '',
   encounters: ''
 });
 
-@inject('gameStore')
+@inject('gameStore', 'alertStore')
 @observer
 class PlayerForm extends React.Component {
   state = {
@@ -35,6 +37,22 @@ class PlayerForm extends React.Component {
     const { currentPlayer } = this.state;
     const newPlayerData = currentPlayer;
     newPlayerData[name] = value;
+    this.setState({ currentPlayer: newPlayerData });
+  };
+
+  handleCheckboxChange = id => {
+    const { currentPlayer } = this.state;
+    const newPlayerData = currentPlayer;
+    const numCurrentStars = currentPlayer.stars.length;
+
+    if (currentPlayer.stars.includes(id)) {
+      newPlayerData.stars = currentPlayer.stars.filter(star => star !== id);
+    } else {
+      if (numCurrentStars > 5) {
+        return this.props.alertStore.add('No more than 6 stars!');
+      }
+      newPlayerData.stars = currentPlayer.stars.concat([id]);
+    }
     this.setState({ currentPlayer: newPlayerData });
   };
 
@@ -58,10 +76,10 @@ class PlayerForm extends React.Component {
       text: user.name,
       value: user.id
     }));
-    const raceOptions = gameStore.races.map(race => ({
-      key: race.id,
-      text: `${race.name} -- (${race.color})`,
-      value: race.id
+    const factionOptions = gameStore.factions.map(faction => ({
+      key: faction.id,
+      text: `${faction.name} -- (${faction.color})`,
+      value: faction.id
     }));
     const engineOptions = gameStore.engines.map(engine => ({
       key: engine.id,
@@ -69,121 +87,144 @@ class PlayerForm extends React.Component {
       value: engine.id
     }));
 
-    if (!gameStore.races.length || !gameStore.engines.length) {
+    if (
+      !gameStore.factions.length ||
+      !gameStore.engines.length ||
+      !gameStore.starTypes.length
+    ) {
       return null;
     }
 
     return (
-      <div css="max-width: 500px; margin: 0 auto;">
+      <div css="max-width: 750px; margin: 0 auto;">
         <h1>
           {gameStore.currentGame ? gameStore.currentGame.numPlayers : 0}{' '}
           player(s) added
         </h1>
         <Form>
-          <Form.Field
-            label="User"
-            placeholder="User"
-            name="id"
-            control={Select}
-            options={userOptions}
-            value={currentPlayer.id}
-            onChange={this.handleChange}
-          />
-          <Form.Field
-            label="Race"
-            placeholder="Race"
-            name="raceId"
-            control={Select}
-            options={raceOptions}
-            value={currentPlayer.raceId}
-            onChange={this.handleChange}
-          />
-          <Form.Field
-            label="Engine"
-            placeholder="Engine"
-            name="engineId"
-            control={Select}
-            options={engineOptions}
-            value={currentPlayer.engineId}
-            onChange={this.handleChange}
-          />
-          <Form.Field
-            onChange={this.handleChange}
-            value={currentPlayer.popularity}
-            label="Popularity"
-            name="popularity"
-            control={Input}
-            type="number"
-            max={18}
-            min={0}
-          />
-          <Form.Field
-            onChange={this.handleChange}
-            value={currentPlayer.power}
-            label="Power"
-            name="power"
-            control={Input}
-            type="number"
-            max={16}
-            min={0}
-          />
-          <Form.Field
-            onChange={this.handleChange}
-            value={currentPlayer.stars}
-            label="Stars"
-            name="stars"
-            control={Input}
-            type="number"
-            max={6}
-            min={0}
-          />
-          <Form.Field
-            onChange={this.handleChange}
-            value={currentPlayer.territories}
-            label="Territories"
-            name="territories"
-            control={Input}
-            type="number"
-            min={0}
-          />
-          <Form.Field
-            onChange={this.handleChange}
-            value={currentPlayer.structures}
-            label="Structures"
-            name="structures"
-            control={Input}
-            type="number"
-            max={9}
-            min={0}
-          />
-          <Form.Field
-            onChange={this.handleChange}
-            value={currentPlayer.gold}
-            label="Gold"
-            name="gold"
-            control={Input}
-            type="number"
-            min={0}
-          />
-          <Form.Field
-            onChange={this.handleChange}
-            value={currentPlayer.combatCards}
-            label="Combat Cards"
-            name="combatCards"
-            control={Input}
-            type="number"
-            min={0}
-          />
-          <Form.Field
-            onChange={this.handleChange}
-            value={currentPlayer.encounters}
-            label="Encounters"
-            name="encounters"
-            control={Input}
-            type="number"
-            max={11}
-            min={0}
-          />
+          <Form.Group widths="equal">
+            <Form.Field
+              label="User"
+              placeholder="User"
+              name="id"
+              control={Select}
+              options={userOptions}
+              value={currentPlayer.id}
+              onChange={this.handleChange}
+            />
+            <Form.Field
+              label="Faction"
+              placeholder="Faction"
+              name="factionId"
+              control={Select}
+              options={factionOptions}
+              value={currentPlayer.factionId}
+              onChange={this.handleChange}
+            />
+            <Form.Field
+              label="Engine"
+              placeholder="Engine"
+              name="engineId"
+              control={Select}
+              options={engineOptions}
+              value={currentPlayer.engineId}
+              onChange={this.handleChange}
+            />
+          </Form.Group>
+          <div css="display: flex; flex-wrap: wrap; justify-content: space-between;">
+            <h4 css="flex: 0 0 100%;">Stars</h4>
+            {gameStore.starTypes.map(starType => (
+              <Form.Field
+                control={Checkbox}
+                checked={currentPlayer.stars.includes(starType.id)}
+                onChange={() => this.handleCheckboxChange(starType.id)}
+                label={starType.type}
+                className={css`
+                  margin-right: 30px !important;
+                `}
+              />
+            ))}
+          </div>
+          <Form.Group widths="equal">
+            <Form.Field
+              onChange={this.handleChange}
+              value={currentPlayer.popularity}
+              label="Popularity"
+              name="popularity"
+              control={Input}
+              type="number"
+              max={18}
+              min={0}
+            />
+            <Form.Field
+              onChange={this.handleChange}
+              value={currentPlayer.power}
+              label="Power"
+              name="power"
+              control={Input}
+              type="number"
+              max={16}
+              min={0}
+            />
+            <Form.Field
+              onChange={this.handleChange}
+              value={currentPlayer.territories}
+              label="Territories"
+              name="territories"
+              control={Input}
+              type="number"
+              min={0}
+            />
+            <Form.Field
+              onChange={this.handleChange}
+              value={currentPlayer.structures}
+              label="Structures"
+              name="structures"
+              control={Input}
+              type="number"
+              max={9}
+              min={0}
+            />
+          </Form.Group>
+          <Form.Group widths="equal">
+            <Form.Field
+              onChange={this.handleChange}
+              value={currentPlayer.resources}
+              label="Resources"
+              name="resources"
+              control={Input}
+              type="number"
+              min={0}
+            />
+            <Form.Field
+              onChange={this.handleChange}
+              value={currentPlayer.gold}
+              label="Gold"
+              name="gold"
+              control={Input}
+              type="number"
+              min={0}
+            />
+            <Form.Field
+              onChange={this.handleChange}
+              value={currentPlayer.combatCards}
+              label="Combat Cards"
+              name="combatCards"
+              control={Input}
+              type="number"
+              min={0}
+            />
+            <Form.Field
+              onChange={this.handleChange}
+              value={currentPlayer.encounters}
+              label="Encounters"
+              name="encounters"
+              control={Input}
+              type="number"
+              max={11}
+              min={0}
+            />
+          </Form.Group>
           <Form.Field control={Button} onClick={this.addPlayer}>
             Add Player
           </Form.Field>
@@ -197,4 +238,3 @@ class PlayerForm extends React.Component {
 }
 
 export default PlayerForm;
-

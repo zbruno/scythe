@@ -5,6 +5,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameUser extends Model
 {
+    protected $table = 'game_user';
+    protected $guarded = [];
+
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);
@@ -15,9 +18,9 @@ class GameUser extends Model
         return $this->belongsTo(\App\Models\Game::class);
     }
 
-    public function race()
+    public function faction()
     {
-        return $this->hasOne(\App\Models\Race::class);
+        return $this->hasOne(\App\Models\Faction::class);
     }
 
     public function engine()

@@ -2,4 +2,5 @@
 
 @section('content')
   <section id="ScytheApp"></section>
+  @getScript(app)
 @endsection

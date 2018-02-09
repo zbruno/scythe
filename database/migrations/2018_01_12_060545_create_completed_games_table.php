@@ -15,11 +15,11 @@ class CreateCompletedGamesTable extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('s3_photo_id');
+            $table->string('s3_photo_id')->nullable();
             $table->timestamps();
         });
 
-        Schema::create('game_users', function (Blueprint $table) {
+        Schema::create('game_user', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('popularity')->unsigned()->default(0);
@@ -32,12 +32,12 @@ class CreateCompletedGamesTable extends Migration
             $table->integer('combat_cards')->unsigned()->default(0);
             $table->integer('encounters')->unsigned()->default(0);
             $table->integer('game_id')->unsigned();
-            $table->integer('race_id')->unsigned();
+            $table->integer('faction_id')->unsigned();
             $table->integer('engine_id')->unsigned();
             $table->timestamps();
         });
 
-        Schema::create('races', function (Blueprint $table) {
+        Schema::create('factions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('character_name');
@@ -54,10 +54,10 @@ class CreateCompletedGamesTable extends Migration
             $table->integer('start_gold');
         });
 
-        Schema::table('game_users', function (Blueprint $table) {
+        Schema::table('game_user', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('game_id')->references('id')->on('games');
-            $table->foreign('race_id')->references('id')->on('races');
+            $table->foreign('faction_id')->references('id')->on('factions');
             $table->foreign('engine_id')->references('id')->on('engines');
         });
 
@@ -73,7 +73,7 @@ class CreateCompletedGamesTable extends Migration
         });
 
         Schema::table('game_user_star_type', function (Blueprint $table) {
-            $table->foreign('game_user_id')->references('id')->on('game_users');
+            $table->foreign('game_user_id')->references('id')->on('game_user');
             $table->foreign('star_type_id')->references('id')->on('star_types');
         });
     }
@@ -85,11 +85,11 @@ class CreateCompletedGamesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('game_user_star_type');
         Schema::dropIfExists('game_user');
         Schema::dropIfExists('engines');
-        Schema::dropIfExists('races');
+        Schema::dropIfExists('factions');
         Schema::dropIfExists('games');
-        Schema::dropIfExists('game_user_star_type');
         Schema::dropIfExists('star_types');
     }
 }

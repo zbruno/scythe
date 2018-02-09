@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Race;
+use App\Models\Faction;
 
-class RaceSeeder extends Seeder
+class FactionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,7 +12,7 @@ class RaceSeeder extends Seeder
      */
     public function run()
     {
-        Race::updateOrCreate(
+        Faction::updateOrCreate(
           ['id' => 1],
           [
             'name' => 'Polania Republic',
@@ -23,7 +23,7 @@ class RaceSeeder extends Seeder
           ]
         );
 
-        Race::updateOrCreate(
+        Faction::updateOrCreate(
           ['id' => 2],
           [
             'name' => 'Saxony Empire',
@@ -34,7 +34,7 @@ class RaceSeeder extends Seeder
           ]
         );
 
-        Race::updateOrCreate(
+        Faction::updateOrCreate(
           ['id' => 3],
           [
             'name' => 'Crimean Khanate',
@@ -45,7 +45,7 @@ class RaceSeeder extends Seeder
           ]
         );
 
-        Race::updateOrCreate(
+        Faction::updateOrCreate(
           ['id' => 4],
           [
             'name' => 'Nordic Kingdom',
@@ -56,7 +56,7 @@ class RaceSeeder extends Seeder
           ]
         );
 
-        Race::updateOrCreate(
+        Faction::updateOrCreate(
           ['id' => 5],
           [
             'name' => 'Rusviet Union',
@@ -67,7 +67,7 @@ class RaceSeeder extends Seeder
           ]
         );
 
-        Race::updateOrCreate(
+        Faction::updateOrCreate(
           ['id' => 6],
           [
             'name' => 'Togawa Shogunate',
@@ -78,7 +78,7 @@ class RaceSeeder extends Seeder
           ]
         );
 
-        Race::updateOrCreate(
+        Faction::updateOrCreate(
           ['id' => 6],
           [
             'name' => 'Clan Albion',

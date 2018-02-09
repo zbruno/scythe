@@ -11,11 +11,11 @@
 |
 */
 
+Auth::routes();
 Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
 
 Route::get('/games', 'GameController@index');
 Route::post('/games', 'GameController@store');

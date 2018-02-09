@@ -7,6 +7,7 @@ import Urls from './urls';
 
 // Stores
 import authStore from './stores/authStore';
+import alertStore from './stores/alertStore';
 import gameStore from './stores/gameStore';
 
 // Views
@@ -15,6 +16,7 @@ import Home from './views/home';
 
 const stores = {
   gameStore,
+  alertStore,
   authStore
 };
 
