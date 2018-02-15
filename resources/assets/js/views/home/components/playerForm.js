@@ -1,6 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { css } from 'react-emotion';
+import Dropzone from 'react-dropzone';
 import {
   Button,
   Checkbox,
@@ -15,7 +16,18 @@ const getDefaultPlayer = () => ({
   id: '',
   factionId: '',
   engineId: '',
-  stars: [],
+  numStars: 0,
+  starsTypes: {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+  },
   popularity: '',
   power: '',
   territories: '',
@@ -30,7 +42,8 @@ const getDefaultPlayer = () => ({
 @observer
 class PlayerForm extends React.Component {
   state = {
-    currentPlayer: getDefaultPlayer()
+    currentPlayer: getDefaultPlayer(),
+    data: null
   };
 
   handleChange = (e, { name, value }) => {
@@ -43,16 +56,28 @@ class PlayerForm extends React.Component {
   handleCheckboxChange = id => {
     const { currentPlayer } = this.state;
     const newPlayerData = currentPlayer;
-    const numCurrentStars = currentPlayer.stars.length;
+    const numCurrentStars = Object.keys(currentPlayer.starsTypes).reduce((previous, key) => {
+      return currentPlayer.starsTypes[parseInt(key, 10)] + previous;
+    }, 0);
 
-    if (currentPlayer.stars.includes(id)) {
-      newPlayerData.stars = currentPlayer.stars.filter(star => star !== id);
+    if (!!currentPlayer.starsTypes[id]) {
+      newPlayerData.starsTypes[id] = 0;
     } else {
       if (numCurrentStars > 5) {
         return this.props.alertStore.add('No more than 6 stars!');
       }
-      newPlayerData.stars = currentPlayer.stars.concat([id]);
+      newPlayerData.starsTypes[id] = 1;
     }
+
+    const numStars = Object.keys(newPlayerData.starsTypes).filter(key => !!currentPlayer.starsTypes[key]).length;
+    newPlayerData.numStars = numStars;
+    this.setState({ currentPlayer: newPlayerData });
+  };
+
+  handleChangeStarSelect = (e, { name, value }) => {
+    const { currentPlayer } = this.state;
+    const newPlayerData = currentPlayer;
+    newPlayerData.starsTypes[name] = value;
     this.setState({ currentPlayer: newPlayerData });
   };
 
@@ -65,33 +90,94 @@ class PlayerForm extends React.Component {
 
   submit = () => {
     const { gameStore } = this.props;
-    gameStore.submitGame();
+    const { data } = this.state;
+    gameStore.submitGame({ data });
+  };
+
+  onDrop = (acceptedFiles, rejectedFiles) => {
+    const imageVal = acceptedFiles[0];
+    this.setState(state => ({
+      currentPlayer: state.currentPlayer,
+      data: imageVal
+    }));
+  };
+
+  renderBattleStars = () => {
+    const { currentPlayer } = this.state;
+    let options = [0, 1, 2].map(id => (
+      { key: id, text: id, value: id }
+    ));
+
+    if (currentPlayer.factionId == 2) {
+      const moreOptions = [3, 4, 5, 6].map(id => (
+        { key: id, text: id, value: id }
+      ));
+
+      options = options.concat(moreOptions);
+    }
+
+    return (
+      <React.Fragment>
+        <Form.Field
+          label="Battles"
+          name="7"
+          control={Select}
+          options={options}
+          value={currentPlayer.starsTypes[7]}
+          onChange={this.handleChangeStarSelect}
+        />
+      </React.Fragment>
+    );
+  };
+
+  renderMissionStars = () => {
+    const { currentPlayer } = this.state;
+    let options = [0, 1].map(id => (
+      { key: id, text: id, value: id }
+    ));
+
+    if (currentPlayer.factionId == 2) {
+      const moreOptions = [2].map(id => (
+        { key: id, text: id, value: id }
+      ));
+
+      options = options.concat(moreOptions);
+    }
+
+    return (
+      <React.Fragment>
+        <Form.Field
+          label="Misson Cards"
+          name="6"
+          control={Select}
+          options={options}
+          value={currentPlayer.starsTypes[6]}
+          onChange={this.handleChangeStarSelect}
+        />
+      </React.Fragment>
+    );
   };
 
   render() {
     const { gameStore } = this.props;
     const { currentPlayer } = this.state;
-    const userOptions = gameStore.users.map(user => ({
+    const userOptions = gameStore.remainingUsers.map(user => ({
       key: user.id,
       text: user.name,
       value: user.id
     }));
-    const factionOptions = gameStore.factions.map(faction => ({
+    const factionOptions = gameStore.remainingFactions.map(faction => ({
       key: faction.id,
       text: `${faction.name} -- (${faction.color})`,
       value: faction.id
     }));
-    const engineOptions = gameStore.engines.map(engine => ({
+    const engineOptions = gameStore.remainingEngines.map(engine => ({
       key: engine.id,
       text: engine.focus,
       value: engine.id
     }));
 
-    if (
-      !gameStore.factions.length ||
-      !gameStore.engines.length ||
-      !gameStore.starTypes.length
-    ) {
+    if (!gameStore.hasLoaded) {
       return null;
     }
 
@@ -131,20 +217,27 @@ class PlayerForm extends React.Component {
               onChange={this.handleChange}
             />
           </Form.Group>
-          <div css="display: flex; flex-wrap: wrap; justify-content: space-between;">
-            <h4 css="flex: 0 0 100%;">Stars</h4>
-            {gameStore.starTypes.map(starType => (
-              <Form.Field
-                control={Checkbox}
-                checked={currentPlayer.stars.includes(starType.id)}
-                onChange={() => this.handleCheckboxChange(starType.id)}
-                label={starType.type}
-                className={css`
-                  margin-right: 30px !important;
-                `}
-              />
-            ))}
-          </div>
+          <Form.Group widths="equal" className={css`margin: 15px 0; padding: 10px 0; border-top: 1px solid; border-bottom: 1px solid;`}>
+            <div css="display: flex; flex-wrap: wrap; justify-content: flex-start;">
+              <h4 css="flex: 0 0 100%;">Stars</h4>
+              {gameStore.singleStarTypes.map(starType => (
+                <Form.Field
+                  control={Checkbox}
+                  checked={!!currentPlayer.starsTypes[starType.id]}
+                  onChange={() => this.handleCheckboxChange(starType.id)}
+                  label={starType.type}
+                  key={starType.id}
+                  className={css`
+                    flex: 0 0 50%;
+                  `}
+                />
+              ))}
+            </div>
+            <div>
+              {this.renderBattleStars()}
+              {this.renderMissionStars()}
+            </div>
+          </Form.Group>
           <Form.Group widths="equal">
             <Form.Field
               onChange={this.handleChange}
@@ -225,7 +318,23 @@ class PlayerForm extends React.Component {
               min={0}
             />
           </Form.Group>
-          <Form.Field control={Button} onClick={this.addPlayer}>
+          {/* <Form.Field
+            control={Button}
+            className={css`
+              position: relative;
+            `}
+          >
+            <Dropzone
+              onDrop={this.onDrop}
+              css="position: absolute; top: 0; right: 0; left: 0; bottom: 0; opacity: 0;"
+            />
+            Upload Image
+          </Form.Field> */}
+          <Form.Field
+            control={Button}
+            onClick={this.addPlayer}
+            disabled={gameStore.players.length === 7}
+          >
             Add Player
           </Form.Field>
           <Form.Field control={Button} onClick={this.submit}>

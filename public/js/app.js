@@ -66607,7 +66607,7 @@ module.exports = v4;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_js_models_starType__ = __webpack_require__(606);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_js_models_engine__ = __webpack_require__(607);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_js_models_faction__ = __webpack_require__(608);
-var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6;
+var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -66668,15 +66668,17 @@ let GameStore = (_class = class GameStore {
   constructor() {
     _initDefineProp(this, 'currentGame', _descriptor, this);
 
-    _initDefineProp(this, 'engines', _descriptor2, this);
+    _initDefineProp(this, 'hasLoaded', _descriptor2, this);
 
-    _initDefineProp(this, 'factions', _descriptor3, this);
+    _initDefineProp(this, 'engines', _descriptor3, this);
 
-    _initDefineProp(this, 'users', _descriptor4, this);
+    _initDefineProp(this, 'factions', _descriptor4, this);
 
-    _initDefineProp(this, 'players', _descriptor5, this);
+    _initDefineProp(this, 'users', _descriptor5, this);
 
-    _initDefineProp(this, 'starTypes', _descriptor6, this);
+    _initDefineProp(this, 'players', _descriptor6, this);
+
+    _initDefineProp(this, 'starTypes', _descriptor7, this);
   }
 
   getGames() {
@@ -66686,7 +66688,35 @@ let GameStore = (_class = class GameStore {
       factions.map(Object(__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */])(faction => this.factions.push(new __WEBPACK_IMPORTED_MODULE_7_js_models_faction__["a" /* default */](faction))));
       users.map(Object(__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */])(user => this.users.push(new __WEBPACK_IMPORTED_MODULE_4_js_models_player__["a" /* default */](user))));
       star_types.map(Object(__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */])(starType => this.starTypes.push(new __WEBPACK_IMPORTED_MODULE_5_js_models_starType__["a" /* default */](starType))));
+      this.hasLoaded = true;
     }));
+  }
+
+  get battleStars() {
+    return this.starTypes.filter(starType => starType.id === 7 || starType.id === 8);
+  }
+
+  get missionStar() {
+    return this.starTypes.find(starType => starType.id === 6);
+  }
+
+  get singleStarTypes() {
+    return this.starTypes.filter(starType => starType.id !== 6 && starType.id !== 7);
+  }
+
+  get remainingEngines() {
+    const usedEngines = this.players.map(p => p.engineId);
+    return this.engines.filter(engine => !usedEngines.includes(engine.id));
+  }
+
+  get remainingFactions() {
+    const usedFactions = this.players.map(p => p.factionId);
+    return this.factions.filter(faction => !usedFactions.includes(faction.id));
+  }
+
+  get remainingUsers() {
+    const usedUsers = this.players.map(p => p.id);
+    return this.users.filter(user => !usedUsers.includes(user.id));
   }
 
   addPlayer(player) {
@@ -66697,39 +66727,44 @@ let GameStore = (_class = class GameStore {
     this.currentGame.addPlayer(new __WEBPACK_IMPORTED_MODULE_4_js_models_player__["a" /* default */](player));
   }
 
-  submitGame() {
+  submitGame(dataObj) {
     const data = this.currentGame;
     __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(__WEBPACK_IMPORTED_MODULE_2_js_urls__["a" /* default */].games, data).then(Object(__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */])(res => console.log(res)));
   }
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'currentGame', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
   enumerable: true,
   initializer: null
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'engines', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'hasLoaded', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
+  enumerable: true,
+  initializer: function () {
+    return false;
+  }
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'engines', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
   enumerable: true,
   initializer: function () {
     return [];
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'factions', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'factions', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
   enumerable: true,
   initializer: function () {
     return [];
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'users', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'users', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
   enumerable: true,
   initializer: function () {
     return [];
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'players', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'players', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
   enumerable: true,
   initializer: function () {
     return [];
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'starTypes', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'starTypes', [__WEBPACK_IMPORTED_MODULE_0_mobx__["j" /* observable */]], {
   enumerable: true,
   initializer: function () {
     return [];
   }
-}), _applyDecoratedDescriptor(_class.prototype, 'getGames', [__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */]], Object.getOwnPropertyDescriptor(_class.prototype, 'getGames'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addPlayer', [__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */]], Object.getOwnPropertyDescriptor(_class.prototype, 'addPlayer'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'submitGame', [__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */]], Object.getOwnPropertyDescriptor(_class.prototype, 'submitGame'), _class.prototype)), _class);
+}), _applyDecoratedDescriptor(_class.prototype, 'getGames', [__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */]], Object.getOwnPropertyDescriptor(_class.prototype, 'getGames'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'battleStars', [__WEBPACK_IMPORTED_MODULE_0_mobx__["d" /* computed */]], Object.getOwnPropertyDescriptor(_class.prototype, 'battleStars'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'missionStar', [__WEBPACK_IMPORTED_MODULE_0_mobx__["d" /* computed */]], Object.getOwnPropertyDescriptor(_class.prototype, 'missionStar'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'singleStarTypes', [__WEBPACK_IMPORTED_MODULE_0_mobx__["d" /* computed */]], Object.getOwnPropertyDescriptor(_class.prototype, 'singleStarTypes'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'remainingEngines', [__WEBPACK_IMPORTED_MODULE_0_mobx__["d" /* computed */]], Object.getOwnPropertyDescriptor(_class.prototype, 'remainingEngines'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'remainingFactions', [__WEBPACK_IMPORTED_MODULE_0_mobx__["d" /* computed */]], Object.getOwnPropertyDescriptor(_class.prototype, 'remainingFactions'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'remainingUsers', [__WEBPACK_IMPORTED_MODULE_0_mobx__["d" /* computed */]], Object.getOwnPropertyDescriptor(_class.prototype, 'remainingUsers'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addPlayer', [__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */]], Object.getOwnPropertyDescriptor(_class.prototype, 'addPlayer'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'submitGame', [__WEBPACK_IMPORTED_MODULE_0_mobx__["c" /* action */]], Object.getOwnPropertyDescriptor(_class.prototype, 'submitGame'), _class.prototype)), _class);
 
 
 /* harmony default export */ __webpack_exports__["a"] = (new GameStore());
@@ -106846,7 +106881,8 @@ var define = false;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_mobx_react__ = __webpack_require__(88);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_emotion__ = __webpack_require__(147);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__ = __webpack_require__(363);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react_dropzone__ = __webpack_require__(957);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__ = __webpack_require__(363);
 
 
 
@@ -106861,11 +106897,23 @@ var define = false;
 
 
 
+
 const getDefaultPlayer = () => ({
   id: '',
   factionId: '',
   engineId: '',
-  stars: [],
+  numStars: 0,
+  starsTypes: {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0
+  },
   popularity: '',
   power: '',
   territories: '',
@@ -106881,7 +106929,8 @@ let PlayerForm = (_dec = Object(__WEBPACK_IMPORTED_MODULE_2_mobx_react__["b" /* 
     var _temp;
 
     return _temp = super(...args), this.state = {
-      currentPlayer: getDefaultPlayer()
+      currentPlayer: getDefaultPlayer(),
+      data: null
     }, this.handleChange = (e, { name, value }) => {
       const { currentPlayer } = this.state;
       const newPlayerData = currentPlayer;
@@ -106890,16 +106939,26 @@ let PlayerForm = (_dec = Object(__WEBPACK_IMPORTED_MODULE_2_mobx_react__["b" /* 
     }, this.handleCheckboxChange = id => {
       const { currentPlayer } = this.state;
       const newPlayerData = currentPlayer;
-      const numCurrentStars = currentPlayer.stars.length;
+      const numCurrentStars = Object.keys(currentPlayer.starsTypes).reduce((previous, key) => {
+        return currentPlayer.starsTypes[parseInt(key, 10)] + previous;
+      }, 0);
 
-      if (currentPlayer.stars.includes(id)) {
-        newPlayerData.stars = currentPlayer.stars.filter(star => star !== id);
+      if (!!currentPlayer.starsTypes[id]) {
+        newPlayerData.starsTypes[id] = 0;
       } else {
         if (numCurrentStars > 5) {
           return this.props.alertStore.add('No more than 6 stars!');
         }
-        newPlayerData.stars = currentPlayer.stars.concat([id]);
+        newPlayerData.starsTypes[id] = 1;
       }
+
+      const numStars = Object.keys(newPlayerData.starsTypes).filter(key => !!currentPlayer.starsTypes[key]).length;
+      newPlayerData.numStars = numStars;
+      this.setState({ currentPlayer: newPlayerData });
+    }, this.handleChangeStarSelect = (e, { name, value }) => {
+      const { currentPlayer } = this.state;
+      const newPlayerData = currentPlayer;
+      newPlayerData.starsTypes[name] = value;
       this.setState({ currentPlayer: newPlayerData });
     }, this.addPlayer = () => {
       const { gameStore } = this.props;
@@ -106908,30 +106967,81 @@ let PlayerForm = (_dec = Object(__WEBPACK_IMPORTED_MODULE_2_mobx_react__["b" /* 
       this.setState({ currentPlayer: getDefaultPlayer() });
     }, this.submit = () => {
       const { gameStore } = this.props;
-      gameStore.submitGame();
+      const { data } = this.state;
+      gameStore.submitGame({ data });
+    }, this.onDrop = (acceptedFiles, rejectedFiles) => {
+      const imageVal = acceptedFiles[0];
+      this.setState(state => ({
+        currentPlayer: state.currentPlayer,
+        data: imageVal
+      }));
+    }, this.renderBattleStars = () => {
+      const { currentPlayer } = this.state;
+      let options = [0, 1, 2].map(id => ({ key: id, text: id, value: id }));
+
+      if (currentPlayer.factionId == 2) {
+        const moreOptions = [3, 4, 5, 6].map(id => ({ key: id, text: id, value: id }));
+
+        options = options.concat(moreOptions);
+      }
+
+      return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_1_react___default.a.Fragment,
+        null,
+        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
+          label: 'Battles',
+          name: '7',
+          control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["f" /* Select */],
+          options: options,
+          value: currentPlayer.starsTypes[7],
+          onChange: this.handleChangeStarSelect
+        })
+      );
+    }, this.renderMissionStars = () => {
+      const { currentPlayer } = this.state;
+      let options = [0, 1].map(id => ({ key: id, text: id, value: id }));
+
+      if (currentPlayer.factionId == 2) {
+        const moreOptions = [2].map(id => ({ key: id, text: id, value: id }));
+
+        options = options.concat(moreOptions);
+      }
+
+      return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_1_react___default.a.Fragment,
+        null,
+        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
+          label: 'Misson Cards',
+          name: '6',
+          control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["f" /* Select */],
+          options: options,
+          value: currentPlayer.starsTypes[6],
+          onChange: this.handleChangeStarSelect
+        })
+      );
     }, _temp;
   }
 
   render() {
     const { gameStore } = this.props;
     const { currentPlayer } = this.state;
-    const userOptions = gameStore.users.map(user => ({
+    const userOptions = gameStore.remainingUsers.map(user => ({
       key: user.id,
       text: user.name,
       value: user.id
     }));
-    const factionOptions = gameStore.factions.map(faction => ({
+    const factionOptions = gameStore.remainingFactions.map(faction => ({
       key: faction.id,
       text: `${faction.name} -- (${faction.color})`,
       value: faction.id
     }));
-    const engineOptions = gameStore.engines.map(engine => ({
+    const engineOptions = gameStore.remainingEngines.map(engine => ({
       key: engine.id,
       text: engine.focus,
       value: engine.id
     }));
 
-    if (!gameStore.factions.length || !gameStore.engines.length || !gameStore.starTypes.length) {
+    if (!gameStore.hasLoaded) {
       return null;
     }
 
@@ -106948,151 +107058,166 @@ let PlayerForm = (_dec = Object(__WEBPACK_IMPORTED_MODULE_2_mobx_react__["b" /* 
         'player(s) added'
       ),
       __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */],
+        __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */],
         null,
         __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-          __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Group,
+          __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Group,
           { widths: 'equal' },
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             label: 'User',
             placeholder: 'User',
             name: 'id',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["f" /* Select */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["f" /* Select */],
             options: userOptions,
             value: currentPlayer.id,
             onChange: this.handleChange
           }),
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             label: 'Faction',
             placeholder: 'Faction',
             name: 'factionId',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["f" /* Select */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["f" /* Select */],
             options: factionOptions,
             value: currentPlayer.factionId,
             onChange: this.handleChange
           }),
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             label: 'Engine',
             placeholder: 'Engine',
             name: 'engineId',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["f" /* Select */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["f" /* Select */],
             options: engineOptions,
             value: currentPlayer.engineId,
             onChange: this.handleChange
           })
         ),
         __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-          'div',
-          {
-            className: /*#__PURE__*/Object(__WEBPACK_IMPORTED_MODULE_0_emotion__["css"])('display:flex;flex-wrap:wrap;justify-content:space-between;')
-          },
+          __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Group,
+          { widths: 'equal', className: /*#__PURE__*/ /*#__PURE__*/Object(__WEBPACK_IMPORTED_MODULE_3_react_emotion__["a" /* css */])('margin:15px 0;padding:10px 0;border-top:1px solid;border-bottom:1px solid;/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlc291cmNlcy9hc3NldHMvanMvdmlld3MvaG9tZS9jb21wb25lbnRzL3BsYXllckZvcm0uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBOE5tRCIsImZpbGUiOiJyZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2hvbWUvY29tcG9uZW50cy9wbGF5ZXJGb3JtLmpzIiwic291cmNlUm9vdCI6Ii9Vc2Vycy96YWNoYXJ5YnJ1bm8vU2l0ZXMvc2N5dGhlLXRyYWNrZXIiLCJzb3VyY2VzQ29udGVudCI6WyIvKioqIElNUE9SVFMgRlJPTSBpbXBvcnRzLWxvYWRlciAqKiovXG52YXIgZGVmaW5lID0gZmFsc2U7XG5cbmltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XG5pbXBvcnQgeyBpbmplY3QsIG9ic2VydmVyIH0gZnJvbSAnbW9ieC1yZWFjdCc7XG5pbXBvcnQgeyBjc3MgfSBmcm9tICdyZWFjdC1lbW90aW9uJztcbmltcG9ydCBEcm9wem9uZSBmcm9tICdyZWFjdC1kcm9wem9uZSc7XG5pbXBvcnQge1xuICBCdXR0b24sXG4gIENoZWNrYm94LFxuICBGb3JtLFxuICBJbnB1dCxcbiAgUmFkaW8sXG4gIFNlbGVjdCxcbiAgVGV4dEFyZWFcbn0gZnJvbSAnc2VtYW50aWMtdWktcmVhY3QnO1xuXG5jb25zdCBnZXREZWZhdWx0UGxheWVyID0gKCkgPT4gKHtcbiAgaWQ6ICcnLFxuICBmYWN0aW9uSWQ6ICcnLFxuICBlbmdpbmVJZDogJycsXG4gIG51bVN0YXJzOiAwLFxuICBzdGFyc1R5cGVzOiB7XG4gICAgMTogMCxcbiAgICAyOiAwLFxuICAgIDM6IDAsXG4gICAgNDogMCxcbiAgICA1OiAwLFxuICAgIDY6IDAsXG4gICAgNzogMCxcbiAgICA4OiAwLFxuICAgIDk6IDAsXG4gIH0sXG4gIHBvcHVsYXJpdHk6ICcnLFxuICBwb3dlcjogJycsXG4gIHRlcnJpdG9yaWVzOiAnJyxcbiAgc3RydWN0dXJlczogJycsXG4gIHJlc291cmNlczogJycsXG4gIGdvbGQ6ICcnLFxuICBjb21iYXRDYXJkczogJycsXG4gIGVuY291bnRlcnM6ICcnXG59KTtcblxuQGluamVjdCgnZ2FtZVN0b3JlJywgJ2FsZXJ0U3RvcmUnKVxuQG9ic2VydmVyXG5jbGFzcyBQbGF5ZXJGb3JtIGV4dGVuZHMgUmVhY3QuQ29tcG9uZW50IHtcbiAgc3RhdGUgPSB7XG4gICAgY3VycmVudFBsYXllcjogZ2V0RGVmYXVsdFBsYXllcigpLFxuICAgIGRhdGE6IG51bGxcbiAgfTtcblxuICBoYW5kbGVDaGFuZ2UgPSAoZSwgeyBuYW1lLCB2YWx1ZSB9KSA9PiB7XG4gICAgY29uc3QgeyBjdXJyZW50UGxheWVyIH0gPSB0aGlzLnN0YXRlO1xuICAgIGNvbnN0IG5ld1BsYXllckRhdGEgPSBjdXJyZW50UGxheWVyO1xuICAgIG5ld1BsYXllckRhdGFbbmFtZV0gPSB2YWx1ZTtcbiAgICB0aGlzLnNldFN0YXRlKHsgY3VycmVudFBsYXllcjogbmV3UGxheWVyRGF0YSB9KTtcbiAgfTtcblxuICBoYW5kbGVDaGVja2JveENoYW5nZSA9IGlkID0+IHtcbiAgICBjb25zdCB7IGN1cnJlbnRQbGF5ZXIgfSA9IHRoaXMuc3RhdGU7XG4gICAgY29uc3QgbmV3UGxheWVyRGF0YSA9IGN1cnJlbnRQbGF5ZXI7XG4gICAgY29uc3QgbnVtQ3VycmVudFN0YXJzID0gT2JqZWN0LmtleXMoY3VycmVudFBsYXllci5zdGFyc1R5cGVzKS5yZWR1Y2UoKHByZXZpb3VzLCBrZXkpID0+IHtcbiAgICAgIHJldHVybiBjdXJyZW50UGxheWVyLnN0YXJzVHlwZXNbcGFyc2VJbnQoa2V5LCAxMCldICsgcHJldmlvdXM7XG4gICAgfSwgMCk7XG5cbiAgICBpZiAoISFjdXJyZW50UGxheWVyLnN0YXJzVHlwZXNbaWRdKSB7XG4gICAgICBuZXdQbGF5ZXJEYXRhLnN0YXJzVHlwZXNbaWRdID0gMDtcbiAgICB9IGVsc2Uge1xuICAgICAgaWYgKG51bUN1cnJlbnRTdGFycyA+IDUpIHtcbiAgICAgICAgcmV0dXJuIHRoaXMucHJvcHMuYWxlcnRTdG9yZS5hZGQoJ05vIG1vcmUgdGhhbiA2IHN0YXJzIScpO1xuICAgICAgfVxuICAgICAgbmV3UGxheWVyRGF0YS5zdGFyc1R5cGVzW2lkXSA9IDE7XG4gICAgfVxuXG4gICAgY29uc3QgbnVtU3RhcnMgPSBPYmplY3Qua2V5cyhuZXdQbGF5ZXJEYXRhLnN0YXJzVHlwZXMpLmZpbHRlcihrZXkgPT4gISFjdXJyZW50UGxheWVyLnN0YXJzVHlwZXNba2V5XSkubGVuZ3RoO1xuICAgIG5ld1BsYXllckRhdGEubnVtU3RhcnMgPSBudW1TdGFycztcbiAgICB0aGlzLnNldFN0YXRlKHsgY3VycmVudFBsYXllcjogbmV3UGxheWVyRGF0YSB9KTtcbiAgfTtcblxuICBoYW5kbGVDaGFuZ2VTdGFyU2VsZWN0ID0gKGUsIHsgbmFtZSwgdmFsdWUgfSkgPT4ge1xuICAgIGNvbnN0IHsgY3VycmVudFBsYXllciB9ID0gdGhpcy5zdGF0ZTtcbiAgICBjb25zdCBuZXdQbGF5ZXJEYXRhID0gY3VycmVudFBsYXllcjtcbiAgICBuZXdQbGF5ZXJEYXRhLnN0YXJzVHlwZXNbbmFtZV0gPSB2YWx1ZTtcbiAgICB0aGlzLnNldFN0YXRlKHsgY3VycmVudFBsYXllcjogbmV3UGxheWVyRGF0YSB9KTtcbiAgfTtcblxuICBhZGRQbGF5ZXIgPSAoKSA9PiB7XG4gICAgY29uc3QgeyBnYW1lU3RvcmUgfSA9IHRoaXMucHJvcHM7XG4gICAgY29uc3QgeyBjdXJyZW50UGxheWVyIH0gPSB0aGlzLnN0YXRlO1xuICAgIGdhbWVTdG9yZS5hZGRQbGF5ZXIoY3VycmVudFBsYXllcik7XG4gICAgdGhpcy5zZXRTdGF0ZSh7IGN1cnJlbnRQbGF5ZXI6IGdldERlZmF1bHRQbGF5ZXIoKSB9KTtcbiAgfTtcblxuICBzdWJtaXQgPSAoKSA9PiB7XG4gICAgY29uc3QgeyBnYW1lU3RvcmUgfSA9IHRoaXMucHJvcHM7XG4gICAgY29uc3QgeyBkYXRhIH0gPSB0aGlzLnN0YXRlO1xuICAgIGdhbWVTdG9yZS5zdWJtaXRHYW1lKHsgZGF0YSB9KTtcbiAgfTtcblxuICBvbkRyb3AgPSAoYWNjZXB0ZWRGaWxlcywgcmVqZWN0ZWRGaWxlcykgPT4ge1xuICAgIGNvbnN0IGltYWdlVmFsID0gYWNjZXB0ZWRGaWxlc1swXTtcbiAgICB0aGlzLnNldFN0YXRlKHN0YXRlID0+ICh7XG4gICAgICBjdXJyZW50UGxheWVyOiBzdGF0ZS5jdXJyZW50UGxheWVyLFxuICAgICAgZGF0YTogaW1hZ2VWYWxcbiAgICB9KSk7XG4gIH07XG5cbiAgcmVuZGVyQmF0dGxlU3RhcnMgPSAoKSA9PiB7XG4gICAgY29uc3QgeyBjdXJyZW50UGxheWVyIH0gPSB0aGlzLnN0YXRlO1xuICAgIGxldCBvcHRpb25zID0gWzAsIDEsIDJdLm1hcChpZCA9PiAoXG4gICAgICB7IGtleTogaWQsIHRleHQ6IGlkLCB2YWx1ZTogaWQgfVxuICAgICkpO1xuXG4gICAgaWYgKGN1cnJlbnRQbGF5ZXIuZmFjdGlvbklkID09IDIpIHtcbiAgICAgIGNvbnN0IG1vcmVPcHRpb25zID0gWzMsIDQsIDUsIDZdLm1hcChpZCA9PiAoXG4gICAgICAgIHsga2V5OiBpZCwgdGV4dDogaWQsIHZhbHVlOiBpZCB9XG4gICAgICApKTtcblxuICAgICAgb3B0aW9ucyA9IG9wdGlvbnMuY29uY2F0KG1vcmVPcHRpb25zKTtcbiAgICB9XG5cbiAgICByZXR1cm4gKFxuICAgICAgPFJlYWN0LkZyYWdtZW50PlxuICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgIGxhYmVsPVwiQmF0dGxlc1wiXG4gICAgICAgICAgbmFtZT1cIjdcIlxuICAgICAgICAgIGNvbnRyb2w9e1NlbGVjdH1cbiAgICAgICAgICBvcHRpb25zPXtvcHRpb25zfVxuICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnN0YXJzVHlwZXNbN119XG4gICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlU3RhclNlbGVjdH1cbiAgICAgICAgLz5cbiAgICAgIDwvUmVhY3QuRnJhZ21lbnQ+XG4gICAgKTtcbiAgfTtcblxuICByZW5kZXJNaXNzaW9uU3RhcnMgPSAoKSA9PiB7XG4gICAgY29uc3QgeyBjdXJyZW50UGxheWVyIH0gPSB0aGlzLnN0YXRlO1xuICAgIGxldCBvcHRpb25zID0gWzAsIDFdLm1hcChpZCA9PiAoXG4gICAgICB7IGtleTogaWQsIHRleHQ6IGlkLCB2YWx1ZTogaWQgfVxuICAgICkpO1xuXG4gICAgaWYgKGN1cnJlbnRQbGF5ZXIuZmFjdGlvbklkID09IDIpIHtcbiAgICAgIGNvbnN0IG1vcmVPcHRpb25zID0gWzJdLm1hcChpZCA9PiAoXG4gICAgICAgIHsga2V5OiBpZCwgdGV4dDogaWQsIHZhbHVlOiBpZCB9XG4gICAgICApKTtcblxuICAgICAgb3B0aW9ucyA9IG9wdGlvbnMuY29uY2F0KG1vcmVPcHRpb25zKTtcbiAgICB9XG5cbiAgICByZXR1cm4gKFxuICAgICAgPFJlYWN0LkZyYWdtZW50PlxuICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgIGxhYmVsPVwiTWlzc29uIENhcmRzXCJcbiAgICAgICAgICBuYW1lPVwiNlwiXG4gICAgICAgICAgY29udHJvbD17U2VsZWN0fVxuICAgICAgICAgIG9wdGlvbnM9e29wdGlvbnN9XG4gICAgICAgICAgdmFsdWU9e2N1cnJlbnRQbGF5ZXIuc3RhcnNUeXBlc1s2XX1cbiAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2VTdGFyU2VsZWN0fVxuICAgICAgICAvPlxuICAgICAgPC9SZWFjdC5GcmFnbWVudD5cbiAgICApO1xuICB9O1xuXG4gIHJlbmRlcigpIHtcbiAgICBjb25zdCB7IGdhbWVTdG9yZSB9ID0gdGhpcy5wcm9wcztcbiAgICBjb25zdCB7IGN1cnJlbnRQbGF5ZXIgfSA9IHRoaXMuc3RhdGU7XG4gICAgY29uc3QgdXNlck9wdGlvbnMgPSBnYW1lU3RvcmUucmVtYWluaW5nVXNlcnMubWFwKHVzZXIgPT4gKHtcbiAgICAgIGtleTogdXNlci5pZCxcbiAgICAgIHRleHQ6IHVzZXIubmFtZSxcbiAgICAgIHZhbHVlOiB1c2VyLmlkXG4gICAgfSkpO1xuICAgIGNvbnN0IGZhY3Rpb25PcHRpb25zID0gZ2FtZVN0b3JlLnJlbWFpbmluZ0ZhY3Rpb25zLm1hcChmYWN0aW9uID0+ICh7XG4gICAgICBrZXk6IGZhY3Rpb24uaWQsXG4gICAgICB0ZXh0OiBgJHtmYWN0aW9uLm5hbWV9IC0tICgke2ZhY3Rpb24uY29sb3J9KWAsXG4gICAgICB2YWx1ZTogZmFjdGlvbi5pZFxuICAgIH0pKTtcbiAgICBjb25zdCBlbmdpbmVPcHRpb25zID0gZ2FtZVN0b3JlLnJlbWFpbmluZ0VuZ2luZXMubWFwKGVuZ2luZSA9PiAoe1xuICAgICAga2V5OiBlbmdpbmUuaWQsXG4gICAgICB0ZXh0OiBlbmdpbmUuZm9jdXMsXG4gICAgICB2YWx1ZTogZW5naW5lLmlkXG4gICAgfSkpO1xuXG4gICAgaWYgKCFnYW1lU3RvcmUuaGFzTG9hZGVkKSB7XG4gICAgICByZXR1cm4gbnVsbDtcbiAgICB9XG5cbiAgICByZXR1cm4gKFxuICAgICAgPGRpdiBjc3M9XCJtYXgtd2lkdGg6IDc1MHB4OyBtYXJnaW46IDAgYXV0bztcIj5cbiAgICAgICAgPGgxPlxuICAgICAgICAgIHtnYW1lU3RvcmUuY3VycmVudEdhbWUgPyBnYW1lU3RvcmUuY3VycmVudEdhbWUubnVtUGxheWVycyA6IDB9eycgJ31cbiAgICAgICAgICBwbGF5ZXIocykgYWRkZWRcbiAgICAgICAgPC9oMT5cbiAgICAgICAgPEZvcm0+XG4gICAgICAgICAgPEZvcm0uR3JvdXAgd2lkdGhzPVwiZXF1YWxcIj5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIGxhYmVsPVwiVXNlclwiXG4gICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiVXNlclwiXG4gICAgICAgICAgICAgIG5hbWU9XCJpZFwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e1NlbGVjdH1cbiAgICAgICAgICAgICAgb3B0aW9ucz17dXNlck9wdGlvbnN9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLmlkfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgbGFiZWw9XCJGYWN0aW9uXCJcbiAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJGYWN0aW9uXCJcbiAgICAgICAgICAgICAgbmFtZT1cImZhY3Rpb25JZFwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e1NlbGVjdH1cbiAgICAgICAgICAgICAgb3B0aW9ucz17ZmFjdGlvbk9wdGlvbnN9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLmZhY3Rpb25JZH1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIGxhYmVsPVwiRW5naW5lXCJcbiAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJFbmdpbmVcIlxuICAgICAgICAgICAgICBuYW1lPVwiZW5naW5lSWRcIlxuICAgICAgICAgICAgICBjb250cm9sPXtTZWxlY3R9XG4gICAgICAgICAgICAgIG9wdGlvbnM9e2VuZ2luZU9wdGlvbnN9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLmVuZ2luZUlkfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvRm9ybS5Hcm91cD5cbiAgICAgICAgICA8Rm9ybS5Hcm91cCB3aWR0aHM9XCJlcXVhbFwiIGNsYXNzTmFtZT17Y3NzYG1hcmdpbjogMTVweCAwOyBwYWRkaW5nOiAxMHB4IDA7IGJvcmRlci10b3A6IDFweCBzb2xpZDsgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkO2B9PlxuICAgICAgICAgICAgPGRpdiBjc3M9XCJkaXNwbGF5OiBmbGV4OyBmbGV4LXdyYXA6IHdyYXA7IGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcIj5cbiAgICAgICAgICAgICAgPGg0IGNzcz1cImZsZXg6IDAgMCAxMDAlO1wiPlN0YXJzPC9oND5cbiAgICAgICAgICAgICAge2dhbWVTdG9yZS5zaW5nbGVTdGFyVHlwZXMubWFwKHN0YXJUeXBlID0+IChcbiAgICAgICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICAgICAgY29udHJvbD17Q2hlY2tib3h9XG4gICAgICAgICAgICAgICAgICBjaGVja2VkPXshIWN1cnJlbnRQbGF5ZXIuc3RhcnNUeXBlc1tzdGFyVHlwZS5pZF19XG4gICAgICAgICAgICAgICAgICBvbkNoYW5nZT17KCkgPT4gdGhpcy5oYW5kbGVDaGVja2JveENoYW5nZShzdGFyVHlwZS5pZCl9XG4gICAgICAgICAgICAgICAgICBsYWJlbD17c3RhclR5cGUudHlwZX1cbiAgICAgICAgICAgICAgICAgIGtleT17c3RhclR5cGUuaWR9XG4gICAgICAgICAgICAgICAgICBjbGFzc05hbWU9e2Nzc2BcbiAgICAgICAgICAgICAgICAgICAgZmxleDogMCAwIDUwJTtcbiAgICAgICAgICAgICAgICAgIGB9XG4gICAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgIHt0aGlzLnJlbmRlckJhdHRsZVN0YXJzKCl9XG4gICAgICAgICAgICAgIHt0aGlzLnJlbmRlck1pc3Npb25TdGFycygpfVxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9Gb3JtLkdyb3VwPlxuICAgICAgICAgIDxGb3JtLkdyb3VwIHdpZHRocz1cImVxdWFsXCI+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnBvcHVsYXJpdHl9XG4gICAgICAgICAgICAgIGxhYmVsPVwiUG9wdWxhcml0eVwiXG4gICAgICAgICAgICAgIG5hbWU9XCJwb3B1bGFyaXR5XCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtYXg9ezE4fVxuICAgICAgICAgICAgICBtaW49ezB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5wb3dlcn1cbiAgICAgICAgICAgICAgbGFiZWw9XCJQb3dlclwiXG4gICAgICAgICAgICAgIG5hbWU9XCJwb3dlclwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e0lucHV0fVxuICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgbWF4PXsxNn1cbiAgICAgICAgICAgICAgbWluPXswfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXt0aGlzLmhhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgdmFsdWU9e2N1cnJlbnRQbGF5ZXIudGVycml0b3JpZXN9XG4gICAgICAgICAgICAgIGxhYmVsPVwiVGVycml0b3JpZXNcIlxuICAgICAgICAgICAgICBuYW1lPVwidGVycml0b3JpZXNcIlxuICAgICAgICAgICAgICBjb250cm9sPXtJbnB1dH1cbiAgICAgICAgICAgICAgdHlwZT1cIm51bWJlclwiXG4gICAgICAgICAgICAgIG1pbj17MH1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnN0cnVjdHVyZXN9XG4gICAgICAgICAgICAgIGxhYmVsPVwiU3RydWN0dXJlc1wiXG4gICAgICAgICAgICAgIG5hbWU9XCJzdHJ1Y3R1cmVzXCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtYXg9ezl9XG4gICAgICAgICAgICAgIG1pbj17MH1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9Gb3JtLkdyb3VwPlxuICAgICAgICAgIDxGb3JtLkdyb3VwIHdpZHRocz1cImVxdWFsXCI+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnJlc291cmNlc31cbiAgICAgICAgICAgICAgbGFiZWw9XCJSZXNvdXJjZXNcIlxuICAgICAgICAgICAgICBuYW1lPVwicmVzb3VyY2VzXCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtaW49ezB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5nb2xkfVxuICAgICAgICAgICAgICBsYWJlbD1cIkdvbGRcIlxuICAgICAgICAgICAgICBuYW1lPVwiZ29sZFwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e0lucHV0fVxuICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgbWluPXswfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXt0aGlzLmhhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgdmFsdWU9e2N1cnJlbnRQbGF5ZXIuY29tYmF0Q2FyZHN9XG4gICAgICAgICAgICAgIGxhYmVsPVwiQ29tYmF0IENhcmRzXCJcbiAgICAgICAgICAgICAgbmFtZT1cImNvbWJhdENhcmRzXCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtaW49ezB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5lbmNvdW50ZXJzfVxuICAgICAgICAgICAgICBsYWJlbD1cIkVuY291bnRlcnNcIlxuICAgICAgICAgICAgICBuYW1lPVwiZW5jb3VudGVyc1wiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e0lucHV0fVxuICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgbWF4PXsxMX1cbiAgICAgICAgICAgICAgbWluPXswfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L0Zvcm0uR3JvdXA+XG4gICAgICAgICAgey8qIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICBjb250cm9sPXtCdXR0b259XG4gICAgICAgICAgICBjbGFzc05hbWU9e2Nzc2BcbiAgICAgICAgICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgICAgICAgYH1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8RHJvcHpvbmVcbiAgICAgICAgICAgICAgb25Ecm9wPXt0aGlzLm9uRHJvcH1cbiAgICAgICAgICAgICAgY3NzPVwicG9zaXRpb246IGFic29sdXRlOyB0b3A6IDA7IHJpZ2h0OiAwOyBsZWZ0OiAwOyBib3R0b206IDA7IG9wYWNpdHk6IDA7XCJcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgICBVcGxvYWQgSW1hZ2VcbiAgICAgICAgICA8L0Zvcm0uRmllbGQ+ICovfVxuICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICBjb250cm9sPXtCdXR0b259XG4gICAgICAgICAgICBvbkNsaWNrPXt0aGlzLmFkZFBsYXllcn1cbiAgICAgICAgICAgIGRpc2FibGVkPXtnYW1lU3RvcmUucGxheWVycy5sZW5ndGggPT09IDd9XG4gICAgICAgICAgPlxuICAgICAgICAgICAgQWRkIFBsYXllclxuICAgICAgICAgIDwvRm9ybS5GaWVsZD5cbiAgICAgICAgICA8Rm9ybS5GaWVsZCBjb250cm9sPXtCdXR0b259IG9uQ2xpY2s9e3RoaXMuc3VibWl0fT5cbiAgICAgICAgICAgIFN1Ym1pdFxuICAgICAgICAgIDwvRm9ybS5GaWVsZD5cbiAgICAgICAgPC9Gb3JtPlxuICAgICAgPC9kaXY+XG4gICAgKTtcbiAgfVxufVxuXG5leHBvcnQgZGVmYXVsdCBQbGF5ZXJGb3JtO1xuXG4iXX0= */') },
           __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-            'h4',
+            'div',
             {
-              className: /*#__PURE__*/Object(__WEBPACK_IMPORTED_MODULE_0_emotion__["css"])('flex:0 0 100%;')
+              className: /*#__PURE__*/Object(__WEBPACK_IMPORTED_MODULE_0_emotion__["css"])('display:flex;flex-wrap:wrap;justify-content:flex-start;')
             },
-            'Stars'
+            __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+              'h4',
+              {
+                className: /*#__PURE__*/Object(__WEBPACK_IMPORTED_MODULE_0_emotion__["css"])('flex:0 0 100%;')
+              },
+              'Stars'
+            ),
+            gameStore.singleStarTypes.map(starType => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
+              control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["b" /* Checkbox */],
+              checked: !!currentPlayer.starsTypes[starType.id],
+              onChange: () => this.handleCheckboxChange(starType.id),
+              label: starType.type,
+              key: starType.id,
+              className: /*#__PURE__*/ /*#__PURE__*/Object(__WEBPACK_IMPORTED_MODULE_3_react_emotion__["a" /* css */])('flex:0 0 50%;/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlc291cmNlcy9hc3NldHMvanMvdmlld3MvaG9tZS9jb21wb25lbnRzL3BsYXllckZvcm0uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBd09nQyIsImZpbGUiOiJyZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2hvbWUvY29tcG9uZW50cy9wbGF5ZXJGb3JtLmpzIiwic291cmNlUm9vdCI6Ii9Vc2Vycy96YWNoYXJ5YnJ1bm8vU2l0ZXMvc2N5dGhlLXRyYWNrZXIiLCJzb3VyY2VzQ29udGVudCI6WyIvKioqIElNUE9SVFMgRlJPTSBpbXBvcnRzLWxvYWRlciAqKiovXG52YXIgZGVmaW5lID0gZmFsc2U7XG5cbmltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XG5pbXBvcnQgeyBpbmplY3QsIG9ic2VydmVyIH0gZnJvbSAnbW9ieC1yZWFjdCc7XG5pbXBvcnQgeyBjc3MgfSBmcm9tICdyZWFjdC1lbW90aW9uJztcbmltcG9ydCBEcm9wem9uZSBmcm9tICdyZWFjdC1kcm9wem9uZSc7XG5pbXBvcnQge1xuICBCdXR0b24sXG4gIENoZWNrYm94LFxuICBGb3JtLFxuICBJbnB1dCxcbiAgUmFkaW8sXG4gIFNlbGVjdCxcbiAgVGV4dEFyZWFcbn0gZnJvbSAnc2VtYW50aWMtdWktcmVhY3QnO1xuXG5jb25zdCBnZXREZWZhdWx0UGxheWVyID0gKCkgPT4gKHtcbiAgaWQ6ICcnLFxuICBmYWN0aW9uSWQ6ICcnLFxuICBlbmdpbmVJZDogJycsXG4gIG51bVN0YXJzOiAwLFxuICBzdGFyc1R5cGVzOiB7XG4gICAgMTogMCxcbiAgICAyOiAwLFxuICAgIDM6IDAsXG4gICAgNDogMCxcbiAgICA1OiAwLFxuICAgIDY6IDAsXG4gICAgNzogMCxcbiAgICA4OiAwLFxuICAgIDk6IDAsXG4gIH0sXG4gIHBvcHVsYXJpdHk6ICcnLFxuICBwb3dlcjogJycsXG4gIHRlcnJpdG9yaWVzOiAnJyxcbiAgc3RydWN0dXJlczogJycsXG4gIHJlc291cmNlczogJycsXG4gIGdvbGQ6ICcnLFxuICBjb21iYXRDYXJkczogJycsXG4gIGVuY291bnRlcnM6ICcnXG59KTtcblxuQGluamVjdCgnZ2FtZVN0b3JlJywgJ2FsZXJ0U3RvcmUnKVxuQG9ic2VydmVyXG5jbGFzcyBQbGF5ZXJGb3JtIGV4dGVuZHMgUmVhY3QuQ29tcG9uZW50IHtcbiAgc3RhdGUgPSB7XG4gICAgY3VycmVudFBsYXllcjogZ2V0RGVmYXVsdFBsYXllcigpLFxuICAgIGRhdGE6IG51bGxcbiAgfTtcblxuICBoYW5kbGVDaGFuZ2UgPSAoZSwgeyBuYW1lLCB2YWx1ZSB9KSA9PiB7XG4gICAgY29uc3QgeyBjdXJyZW50UGxheWVyIH0gPSB0aGlzLnN0YXRlO1xuICAgIGNvbnN0IG5ld1BsYXllckRhdGEgPSBjdXJyZW50UGxheWVyO1xuICAgIG5ld1BsYXllckRhdGFbbmFtZV0gPSB2YWx1ZTtcbiAgICB0aGlzLnNldFN0YXRlKHsgY3VycmVudFBsYXllcjogbmV3UGxheWVyRGF0YSB9KTtcbiAgfTtcblxuICBoYW5kbGVDaGVja2JveENoYW5nZSA9IGlkID0+IHtcbiAgICBjb25zdCB7IGN1cnJlbnRQbGF5ZXIgfSA9IHRoaXMuc3RhdGU7XG4gICAgY29uc3QgbmV3UGxheWVyRGF0YSA9IGN1cnJlbnRQbGF5ZXI7XG4gICAgY29uc3QgbnVtQ3VycmVudFN0YXJzID0gT2JqZWN0LmtleXMoY3VycmVudFBsYXllci5zdGFyc1R5cGVzKS5yZWR1Y2UoKHByZXZpb3VzLCBrZXkpID0+IHtcbiAgICAgIHJldHVybiBjdXJyZW50UGxheWVyLnN0YXJzVHlwZXNbcGFyc2VJbnQoa2V5LCAxMCldICsgcHJldmlvdXM7XG4gICAgfSwgMCk7XG5cbiAgICBpZiAoISFjdXJyZW50UGxheWVyLnN0YXJzVHlwZXNbaWRdKSB7XG4gICAgICBuZXdQbGF5ZXJEYXRhLnN0YXJzVHlwZXNbaWRdID0gMDtcbiAgICB9IGVsc2Uge1xuICAgICAgaWYgKG51bUN1cnJlbnRTdGFycyA+IDUpIHtcbiAgICAgICAgcmV0dXJuIHRoaXMucHJvcHMuYWxlcnRTdG9yZS5hZGQoJ05vIG1vcmUgdGhhbiA2IHN0YXJzIScpO1xuICAgICAgfVxuICAgICAgbmV3UGxheWVyRGF0YS5zdGFyc1R5cGVzW2lkXSA9IDE7XG4gICAgfVxuXG4gICAgY29uc3QgbnVtU3RhcnMgPSBPYmplY3Qua2V5cyhuZXdQbGF5ZXJEYXRhLnN0YXJzVHlwZXMpLmZpbHRlcihrZXkgPT4gISFjdXJyZW50UGxheWVyLnN0YXJzVHlwZXNba2V5XSkubGVuZ3RoO1xuICAgIG5ld1BsYXllckRhdGEubnVtU3RhcnMgPSBudW1TdGFycztcbiAgICB0aGlzLnNldFN0YXRlKHsgY3VycmVudFBsYXllcjogbmV3UGxheWVyRGF0YSB9KTtcbiAgfTtcblxuICBoYW5kbGVDaGFuZ2VTdGFyU2VsZWN0ID0gKGUsIHsgbmFtZSwgdmFsdWUgfSkgPT4ge1xuICAgIGNvbnN0IHsgY3VycmVudFBsYXllciB9ID0gdGhpcy5zdGF0ZTtcbiAgICBjb25zdCBuZXdQbGF5ZXJEYXRhID0gY3VycmVudFBsYXllcjtcbiAgICBuZXdQbGF5ZXJEYXRhLnN0YXJzVHlwZXNbbmFtZV0gPSB2YWx1ZTtcbiAgICB0aGlzLnNldFN0YXRlKHsgY3VycmVudFBsYXllcjogbmV3UGxheWVyRGF0YSB9KTtcbiAgfTtcblxuICBhZGRQbGF5ZXIgPSAoKSA9PiB7XG4gICAgY29uc3QgeyBnYW1lU3RvcmUgfSA9IHRoaXMucHJvcHM7XG4gICAgY29uc3QgeyBjdXJyZW50UGxheWVyIH0gPSB0aGlzLnN0YXRlO1xuICAgIGdhbWVTdG9yZS5hZGRQbGF5ZXIoY3VycmVudFBsYXllcik7XG4gICAgdGhpcy5zZXRTdGF0ZSh7IGN1cnJlbnRQbGF5ZXI6IGdldERlZmF1bHRQbGF5ZXIoKSB9KTtcbiAgfTtcblxuICBzdWJtaXQgPSAoKSA9PiB7XG4gICAgY29uc3QgeyBnYW1lU3RvcmUgfSA9IHRoaXMucHJvcHM7XG4gICAgY29uc3QgeyBkYXRhIH0gPSB0aGlzLnN0YXRlO1xuICAgIGdhbWVTdG9yZS5zdWJtaXRHYW1lKHsgZGF0YSB9KTtcbiAgfTtcblxuICBvbkRyb3AgPSAoYWNjZXB0ZWRGaWxlcywgcmVqZWN0ZWRGaWxlcykgPT4ge1xuICAgIGNvbnN0IGltYWdlVmFsID0gYWNjZXB0ZWRGaWxlc1swXTtcbiAgICB0aGlzLnNldFN0YXRlKHN0YXRlID0+ICh7XG4gICAgICBjdXJyZW50UGxheWVyOiBzdGF0ZS5jdXJyZW50UGxheWVyLFxuICAgICAgZGF0YTogaW1hZ2VWYWxcbiAgICB9KSk7XG4gIH07XG5cbiAgcmVuZGVyQmF0dGxlU3RhcnMgPSAoKSA9PiB7XG4gICAgY29uc3QgeyBjdXJyZW50UGxheWVyIH0gPSB0aGlzLnN0YXRlO1xuICAgIGxldCBvcHRpb25zID0gWzAsIDEsIDJdLm1hcChpZCA9PiAoXG4gICAgICB7IGtleTogaWQsIHRleHQ6IGlkLCB2YWx1ZTogaWQgfVxuICAgICkpO1xuXG4gICAgaWYgKGN1cnJlbnRQbGF5ZXIuZmFjdGlvbklkID09IDIpIHtcbiAgICAgIGNvbnN0IG1vcmVPcHRpb25zID0gWzMsIDQsIDUsIDZdLm1hcChpZCA9PiAoXG4gICAgICAgIHsga2V5OiBpZCwgdGV4dDogaWQsIHZhbHVlOiBpZCB9XG4gICAgICApKTtcblxuICAgICAgb3B0aW9ucyA9IG9wdGlvbnMuY29uY2F0KG1vcmVPcHRpb25zKTtcbiAgICB9XG5cbiAgICByZXR1cm4gKFxuICAgICAgPFJlYWN0LkZyYWdtZW50PlxuICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgIGxhYmVsPVwiQmF0dGxlc1wiXG4gICAgICAgICAgbmFtZT1cIjdcIlxuICAgICAgICAgIGNvbnRyb2w9e1NlbGVjdH1cbiAgICAgICAgICBvcHRpb25zPXtvcHRpb25zfVxuICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnN0YXJzVHlwZXNbN119XG4gICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlU3RhclNlbGVjdH1cbiAgICAgICAgLz5cbiAgICAgIDwvUmVhY3QuRnJhZ21lbnQ+XG4gICAgKTtcbiAgfTtcblxuICByZW5kZXJNaXNzaW9uU3RhcnMgPSAoKSA9PiB7XG4gICAgY29uc3QgeyBjdXJyZW50UGxheWVyIH0gPSB0aGlzLnN0YXRlO1xuICAgIGxldCBvcHRpb25zID0gWzAsIDFdLm1hcChpZCA9PiAoXG4gICAgICB7IGtleTogaWQsIHRleHQ6IGlkLCB2YWx1ZTogaWQgfVxuICAgICkpO1xuXG4gICAgaWYgKGN1cnJlbnRQbGF5ZXIuZmFjdGlvbklkID09IDIpIHtcbiAgICAgIGNvbnN0IG1vcmVPcHRpb25zID0gWzJdLm1hcChpZCA9PiAoXG4gICAgICAgIHsga2V5OiBpZCwgdGV4dDogaWQsIHZhbHVlOiBpZCB9XG4gICAgICApKTtcblxuICAgICAgb3B0aW9ucyA9IG9wdGlvbnMuY29uY2F0KG1vcmVPcHRpb25zKTtcbiAgICB9XG5cbiAgICByZXR1cm4gKFxuICAgICAgPFJlYWN0LkZyYWdtZW50PlxuICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgIGxhYmVsPVwiTWlzc29uIENhcmRzXCJcbiAgICAgICAgICBuYW1lPVwiNlwiXG4gICAgICAgICAgY29udHJvbD17U2VsZWN0fVxuICAgICAgICAgIG9wdGlvbnM9e29wdGlvbnN9XG4gICAgICAgICAgdmFsdWU9e2N1cnJlbnRQbGF5ZXIuc3RhcnNUeXBlc1s2XX1cbiAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2VTdGFyU2VsZWN0fVxuICAgICAgICAvPlxuICAgICAgPC9SZWFjdC5GcmFnbWVudD5cbiAgICApO1xuICB9O1xuXG4gIHJlbmRlcigpIHtcbiAgICBjb25zdCB7IGdhbWVTdG9yZSB9ID0gdGhpcy5wcm9wcztcbiAgICBjb25zdCB7IGN1cnJlbnRQbGF5ZXIgfSA9IHRoaXMuc3RhdGU7XG4gICAgY29uc3QgdXNlck9wdGlvbnMgPSBnYW1lU3RvcmUucmVtYWluaW5nVXNlcnMubWFwKHVzZXIgPT4gKHtcbiAgICAgIGtleTogdXNlci5pZCxcbiAgICAgIHRleHQ6IHVzZXIubmFtZSxcbiAgICAgIHZhbHVlOiB1c2VyLmlkXG4gICAgfSkpO1xuICAgIGNvbnN0IGZhY3Rpb25PcHRpb25zID0gZ2FtZVN0b3JlLnJlbWFpbmluZ0ZhY3Rpb25zLm1hcChmYWN0aW9uID0+ICh7XG4gICAgICBrZXk6IGZhY3Rpb24uaWQsXG4gICAgICB0ZXh0OiBgJHtmYWN0aW9uLm5hbWV9IC0tICgke2ZhY3Rpb24uY29sb3J9KWAsXG4gICAgICB2YWx1ZTogZmFjdGlvbi5pZFxuICAgIH0pKTtcbiAgICBjb25zdCBlbmdpbmVPcHRpb25zID0gZ2FtZVN0b3JlLnJlbWFpbmluZ0VuZ2luZXMubWFwKGVuZ2luZSA9PiAoe1xuICAgICAga2V5OiBlbmdpbmUuaWQsXG4gICAgICB0ZXh0OiBlbmdpbmUuZm9jdXMsXG4gICAgICB2YWx1ZTogZW5naW5lLmlkXG4gICAgfSkpO1xuXG4gICAgaWYgKCFnYW1lU3RvcmUuaGFzTG9hZGVkKSB7XG4gICAgICByZXR1cm4gbnVsbDtcbiAgICB9XG5cbiAgICByZXR1cm4gKFxuICAgICAgPGRpdiBjc3M9XCJtYXgtd2lkdGg6IDc1MHB4OyBtYXJnaW46IDAgYXV0bztcIj5cbiAgICAgICAgPGgxPlxuICAgICAgICAgIHtnYW1lU3RvcmUuY3VycmVudEdhbWUgPyBnYW1lU3RvcmUuY3VycmVudEdhbWUubnVtUGxheWVycyA6IDB9eycgJ31cbiAgICAgICAgICBwbGF5ZXIocykgYWRkZWRcbiAgICAgICAgPC9oMT5cbiAgICAgICAgPEZvcm0+XG4gICAgICAgICAgPEZvcm0uR3JvdXAgd2lkdGhzPVwiZXF1YWxcIj5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIGxhYmVsPVwiVXNlclwiXG4gICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiVXNlclwiXG4gICAgICAgICAgICAgIG5hbWU9XCJpZFwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e1NlbGVjdH1cbiAgICAgICAgICAgICAgb3B0aW9ucz17dXNlck9wdGlvbnN9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLmlkfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgbGFiZWw9XCJGYWN0aW9uXCJcbiAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJGYWN0aW9uXCJcbiAgICAgICAgICAgICAgbmFtZT1cImZhY3Rpb25JZFwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e1NlbGVjdH1cbiAgICAgICAgICAgICAgb3B0aW9ucz17ZmFjdGlvbk9wdGlvbnN9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLmZhY3Rpb25JZH1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIGxhYmVsPVwiRW5naW5lXCJcbiAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJFbmdpbmVcIlxuICAgICAgICAgICAgICBuYW1lPVwiZW5naW5lSWRcIlxuICAgICAgICAgICAgICBjb250cm9sPXtTZWxlY3R9XG4gICAgICAgICAgICAgIG9wdGlvbnM9e2VuZ2luZU9wdGlvbnN9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLmVuZ2luZUlkfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvRm9ybS5Hcm91cD5cbiAgICAgICAgICA8Rm9ybS5Hcm91cCB3aWR0aHM9XCJlcXVhbFwiIGNsYXNzTmFtZT17Y3NzYG1hcmdpbjogMTVweCAwOyBwYWRkaW5nOiAxMHB4IDA7IGJvcmRlci10b3A6IDFweCBzb2xpZDsgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkO2B9PlxuICAgICAgICAgICAgPGRpdiBjc3M9XCJkaXNwbGF5OiBmbGV4OyBmbGV4LXdyYXA6IHdyYXA7IGp1c3RpZnktY29udGVudDogZmxleC1zdGFydDtcIj5cbiAgICAgICAgICAgICAgPGg0IGNzcz1cImZsZXg6IDAgMCAxMDAlO1wiPlN0YXJzPC9oND5cbiAgICAgICAgICAgICAge2dhbWVTdG9yZS5zaW5nbGVTdGFyVHlwZXMubWFwKHN0YXJUeXBlID0+IChcbiAgICAgICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICAgICAgY29udHJvbD17Q2hlY2tib3h9XG4gICAgICAgICAgICAgICAgICBjaGVja2VkPXshIWN1cnJlbnRQbGF5ZXIuc3RhcnNUeXBlc1tzdGFyVHlwZS5pZF19XG4gICAgICAgICAgICAgICAgICBvbkNoYW5nZT17KCkgPT4gdGhpcy5oYW5kbGVDaGVja2JveENoYW5nZShzdGFyVHlwZS5pZCl9XG4gICAgICAgICAgICAgICAgICBsYWJlbD17c3RhclR5cGUudHlwZX1cbiAgICAgICAgICAgICAgICAgIGtleT17c3RhclR5cGUuaWR9XG4gICAgICAgICAgICAgICAgICBjbGFzc05hbWU9e2Nzc2BcbiAgICAgICAgICAgICAgICAgICAgZmxleDogMCAwIDUwJTtcbiAgICAgICAgICAgICAgICAgIGB9XG4gICAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgIHt0aGlzLnJlbmRlckJhdHRsZVN0YXJzKCl9XG4gICAgICAgICAgICAgIHt0aGlzLnJlbmRlck1pc3Npb25TdGFycygpfVxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9Gb3JtLkdyb3VwPlxuICAgICAgICAgIDxGb3JtLkdyb3VwIHdpZHRocz1cImVxdWFsXCI+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnBvcHVsYXJpdHl9XG4gICAgICAgICAgICAgIGxhYmVsPVwiUG9wdWxhcml0eVwiXG4gICAgICAgICAgICAgIG5hbWU9XCJwb3B1bGFyaXR5XCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtYXg9ezE4fVxuICAgICAgICAgICAgICBtaW49ezB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5wb3dlcn1cbiAgICAgICAgICAgICAgbGFiZWw9XCJQb3dlclwiXG4gICAgICAgICAgICAgIG5hbWU9XCJwb3dlclwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e0lucHV0fVxuICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgbWF4PXsxNn1cbiAgICAgICAgICAgICAgbWluPXswfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXt0aGlzLmhhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgdmFsdWU9e2N1cnJlbnRQbGF5ZXIudGVycml0b3JpZXN9XG4gICAgICAgICAgICAgIGxhYmVsPVwiVGVycml0b3JpZXNcIlxuICAgICAgICAgICAgICBuYW1lPVwidGVycml0b3JpZXNcIlxuICAgICAgICAgICAgICBjb250cm9sPXtJbnB1dH1cbiAgICAgICAgICAgICAgdHlwZT1cIm51bWJlclwiXG4gICAgICAgICAgICAgIG1pbj17MH1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnN0cnVjdHVyZXN9XG4gICAgICAgICAgICAgIGxhYmVsPVwiU3RydWN0dXJlc1wiXG4gICAgICAgICAgICAgIG5hbWU9XCJzdHJ1Y3R1cmVzXCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtYXg9ezl9XG4gICAgICAgICAgICAgIG1pbj17MH1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9Gb3JtLkdyb3VwPlxuICAgICAgICAgIDxGb3JtLkdyb3VwIHdpZHRocz1cImVxdWFsXCI+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnJlc291cmNlc31cbiAgICAgICAgICAgICAgbGFiZWw9XCJSZXNvdXJjZXNcIlxuICAgICAgICAgICAgICBuYW1lPVwicmVzb3VyY2VzXCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtaW49ezB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5nb2xkfVxuICAgICAgICAgICAgICBsYWJlbD1cIkdvbGRcIlxuICAgICAgICAgICAgICBuYW1lPVwiZ29sZFwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e0lucHV0fVxuICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgbWluPXswfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXt0aGlzLmhhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgdmFsdWU9e2N1cnJlbnRQbGF5ZXIuY29tYmF0Q2FyZHN9XG4gICAgICAgICAgICAgIGxhYmVsPVwiQ29tYmF0IENhcmRzXCJcbiAgICAgICAgICAgICAgbmFtZT1cImNvbWJhdENhcmRzXCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtaW49ezB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5lbmNvdW50ZXJzfVxuICAgICAgICAgICAgICBsYWJlbD1cIkVuY291bnRlcnNcIlxuICAgICAgICAgICAgICBuYW1lPVwiZW5jb3VudGVyc1wiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e0lucHV0fVxuICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgbWF4PXsxMX1cbiAgICAgICAgICAgICAgbWluPXswfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L0Zvcm0uR3JvdXA+XG4gICAgICAgICAgey8qIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICBjb250cm9sPXtCdXR0b259XG4gICAgICAgICAgICBjbGFzc05hbWU9e2Nzc2BcbiAgICAgICAgICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgICAgICAgYH1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8RHJvcHpvbmVcbiAgICAgICAgICAgICAgb25Ecm9wPXt0aGlzLm9uRHJvcH1cbiAgICAgICAgICAgICAgY3NzPVwicG9zaXRpb246IGFic29sdXRlOyB0b3A6IDA7IHJpZ2h0OiAwOyBsZWZ0OiAwOyBib3R0b206IDA7IG9wYWNpdHk6IDA7XCJcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgICBVcGxvYWQgSW1hZ2VcbiAgICAgICAgICA8L0Zvcm0uRmllbGQ+ICovfVxuICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICBjb250cm9sPXtCdXR0b259XG4gICAgICAgICAgICBvbkNsaWNrPXt0aGlzLmFkZFBsYXllcn1cbiAgICAgICAgICAgIGRpc2FibGVkPXtnYW1lU3RvcmUucGxheWVycy5sZW5ndGggPT09IDd9XG4gICAgICAgICAgPlxuICAgICAgICAgICAgQWRkIFBsYXllclxuICAgICAgICAgIDwvRm9ybS5GaWVsZD5cbiAgICAgICAgICA8Rm9ybS5GaWVsZCBjb250cm9sPXtCdXR0b259IG9uQ2xpY2s9e3RoaXMuc3VibWl0fT5cbiAgICAgICAgICAgIFN1Ym1pdFxuICAgICAgICAgIDwvRm9ybS5GaWVsZD5cbiAgICAgICAgPC9Gb3JtPlxuICAgICAgPC9kaXY+XG4gICAgKTtcbiAgfVxufVxuXG5leHBvcnQgZGVmYXVsdCBQbGF5ZXJGb3JtO1xuXG4iXX0= */')
+            }))
           ),
-          gameStore.starTypes.map(starType => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["b" /* Checkbox */],
-            checked: currentPlayer.stars.includes(starType.id),
-            onChange: () => this.handleCheckboxChange(starType.id),
-            label: starType.type,
-            className: /*#__PURE__*/ /*#__PURE__*/Object(__WEBPACK_IMPORTED_MODULE_3_react_emotion__["a" /* css */])('margin-right:5px !important;/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlc291cmNlcy9hc3NldHMvanMvdmlld3MvaG9tZS9jb21wb25lbnRzL3BsYXllckZvcm0uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBZ0o4QiIsImZpbGUiOiJyZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2hvbWUvY29tcG9uZW50cy9wbGF5ZXJGb3JtLmpzIiwic291cmNlUm9vdCI6Ii9Vc2Vycy96YWNoYXJ5YnJ1bm8vU2l0ZXMvc2N5dGhlLXRyYWNrZXIiLCJzb3VyY2VzQ29udGVudCI6WyIvKioqIElNUE9SVFMgRlJPTSBpbXBvcnRzLWxvYWRlciAqKiovXG52YXIgZGVmaW5lID0gZmFsc2U7XG5cbmltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XG5pbXBvcnQgeyBpbmplY3QsIG9ic2VydmVyIH0gZnJvbSAnbW9ieC1yZWFjdCc7XG5pbXBvcnQgeyBjc3MgfSBmcm9tICdyZWFjdC1lbW90aW9uJztcbmltcG9ydCB7XG4gIEJ1dHRvbixcbiAgQ2hlY2tib3gsXG4gIEZvcm0sXG4gIElucHV0LFxuICBSYWRpbyxcbiAgU2VsZWN0LFxuICBUZXh0QXJlYVxufSBmcm9tICdzZW1hbnRpYy11aS1yZWFjdCc7XG5cbmNvbnN0IGdldERlZmF1bHRQbGF5ZXIgPSAoKSA9PiAoe1xuICBpZDogJycsXG4gIGZhY3Rpb25JZDogJycsXG4gIGVuZ2luZUlkOiAnJyxcbiAgc3RhcnM6IFtdLFxuICBwb3B1bGFyaXR5OiAnJyxcbiAgcG93ZXI6ICcnLFxuICB0ZXJyaXRvcmllczogJycsXG4gIHN0cnVjdHVyZXM6ICcnLFxuICByZXNvdXJjZXM6ICcnLFxuICBnb2xkOiAnJyxcbiAgY29tYmF0Q2FyZHM6ICcnLFxuICBlbmNvdW50ZXJzOiAnJ1xufSk7XG5cbkBpbmplY3QoJ2dhbWVTdG9yZScsICdhbGVydFN0b3JlJylcbkBvYnNlcnZlclxuY2xhc3MgUGxheWVyRm9ybSBleHRlbmRzIFJlYWN0LkNvbXBvbmVudCB7XG4gIHN0YXRlID0ge1xuICAgIGN1cnJlbnRQbGF5ZXI6IGdldERlZmF1bHRQbGF5ZXIoKVxuICB9O1xuXG4gIGhhbmRsZUNoYW5nZSA9IChlLCB7IG5hbWUsIHZhbHVlIH0pID0+IHtcbiAgICBjb25zdCB7IGN1cnJlbnRQbGF5ZXIgfSA9IHRoaXMuc3RhdGU7XG4gICAgY29uc3QgbmV3UGxheWVyRGF0YSA9IGN1cnJlbnRQbGF5ZXI7XG4gICAgbmV3UGxheWVyRGF0YVtuYW1lXSA9IHZhbHVlO1xuICAgIHRoaXMuc2V0U3RhdGUoeyBjdXJyZW50UGxheWVyOiBuZXdQbGF5ZXJEYXRhIH0pO1xuICB9O1xuXG4gIGhhbmRsZUNoZWNrYm94Q2hhbmdlID0gaWQgPT4ge1xuICAgIGNvbnN0IHsgY3VycmVudFBsYXllciB9ID0gdGhpcy5zdGF0ZTtcbiAgICBjb25zdCBuZXdQbGF5ZXJEYXRhID0gY3VycmVudFBsYXllcjtcbiAgICBjb25zdCBudW1DdXJyZW50U3RhcnMgPSBjdXJyZW50UGxheWVyLnN0YXJzLmxlbmd0aDtcblxuICAgIGlmIChjdXJyZW50UGxheWVyLnN0YXJzLmluY2x1ZGVzKGlkKSkge1xuICAgICAgbmV3UGxheWVyRGF0YS5zdGFycyA9IGN1cnJlbnRQbGF5ZXIuc3RhcnMuZmlsdGVyKHN0YXIgPT4gc3RhciAhPT0gaWQpO1xuICAgIH0gZWxzZSB7XG4gICAgICBpZiAobnVtQ3VycmVudFN0YXJzID4gNSkge1xuICAgICAgICByZXR1cm4gdGhpcy5wcm9wcy5hbGVydFN0b3JlLmFkZCgnTm8gbW9yZSB0aGFuIDYgc3RhcnMhJyk7XG4gICAgICB9XG4gICAgICBuZXdQbGF5ZXJEYXRhLnN0YXJzID0gY3VycmVudFBsYXllci5zdGFycy5jb25jYXQoW2lkXSk7XG4gICAgfVxuICAgIHRoaXMuc2V0U3RhdGUoeyBjdXJyZW50UGxheWVyOiBuZXdQbGF5ZXJEYXRhIH0pO1xuICB9O1xuXG4gIGFkZFBsYXllciA9ICgpID0+IHtcbiAgICBjb25zdCB7IGdhbWVTdG9yZSB9ID0gdGhpcy5wcm9wcztcbiAgICBjb25zdCB7IGN1cnJlbnRQbGF5ZXIgfSA9IHRoaXMuc3RhdGU7XG4gICAgZ2FtZVN0b3JlLmFkZFBsYXllcihjdXJyZW50UGxheWVyKTtcbiAgICB0aGlzLnNldFN0YXRlKHsgY3VycmVudFBsYXllcjogZ2V0RGVmYXVsdFBsYXllcigpIH0pO1xuICB9O1xuXG4gIHN1Ym1pdCA9ICgpID0+IHtcbiAgICBjb25zdCB7IGdhbWVTdG9yZSB9ID0gdGhpcy5wcm9wcztcbiAgICBnYW1lU3RvcmUuc3VibWl0R2FtZSgpO1xuICB9O1xuXG4gIHJlbmRlcigpIHtcbiAgICBjb25zdCB7IGdhbWVTdG9yZSB9ID0gdGhpcy5wcm9wcztcbiAgICBjb25zdCB7IGN1cnJlbnRQbGF5ZXIgfSA9IHRoaXMuc3RhdGU7XG4gICAgY29uc3QgdXNlck9wdGlvbnMgPSBnYW1lU3RvcmUudXNlcnMubWFwKHVzZXIgPT4gKHtcbiAgICAgIGtleTogdXNlci5pZCxcbiAgICAgIHRleHQ6IHVzZXIubmFtZSxcbiAgICAgIHZhbHVlOiB1c2VyLmlkXG4gICAgfSkpO1xuICAgIGNvbnN0IGZhY3Rpb25PcHRpb25zID0gZ2FtZVN0b3JlLmZhY3Rpb25zLm1hcChmYWN0aW9uID0+ICh7XG4gICAgICBrZXk6IGZhY3Rpb24uaWQsXG4gICAgICB0ZXh0OiBgJHtmYWN0aW9uLm5hbWV9IC0tICgke2ZhY3Rpb24uY29sb3J9KWAsXG4gICAgICB2YWx1ZTogZmFjdGlvbi5pZFxuICAgIH0pKTtcbiAgICBjb25zdCBlbmdpbmVPcHRpb25zID0gZ2FtZVN0b3JlLmVuZ2luZXMubWFwKGVuZ2luZSA9PiAoe1xuICAgICAga2V5OiBlbmdpbmUuaWQsXG4gICAgICB0ZXh0OiBlbmdpbmUuZm9jdXMsXG4gICAgICB2YWx1ZTogZW5naW5lLmlkXG4gICAgfSkpO1xuXG4gICAgaWYgKFxuICAgICAgIWdhbWVTdG9yZS5mYWN0aW9ucy5sZW5ndGggfHxcbiAgICAgICFnYW1lU3RvcmUuZW5naW5lcy5sZW5ndGggfHxcbiAgICAgICFnYW1lU3RvcmUuc3RhclR5cGVzLmxlbmd0aFxuICAgICkge1xuICAgICAgcmV0dXJuIG51bGw7XG4gICAgfVxuXG4gICAgcmV0dXJuIChcbiAgICAgIDxkaXYgY3NzPVwibWF4LXdpZHRoOiA3NTBweDsgbWFyZ2luOiAwIGF1dG87XCI+XG4gICAgICAgIDxoMT5cbiAgICAgICAgICB7Z2FtZVN0b3JlLmN1cnJlbnRHYW1lID8gZ2FtZVN0b3JlLmN1cnJlbnRHYW1lLm51bVBsYXllcnMgOiAwfXsnICd9XG4gICAgICAgICAgcGxheWVyKHMpIGFkZGVkXG4gICAgICAgIDwvaDE+XG4gICAgICAgIDxGb3JtPlxuICAgICAgICAgIDxGb3JtLkdyb3VwIHdpZHRocz1cImVxdWFsXCI+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBsYWJlbD1cIlVzZXJcIlxuICAgICAgICAgICAgICBwbGFjZWhvbGRlcj1cIlVzZXJcIlxuICAgICAgICAgICAgICBuYW1lPVwiaWRcIlxuICAgICAgICAgICAgICBjb250cm9sPXtTZWxlY3R9XG4gICAgICAgICAgICAgIG9wdGlvbnM9e3VzZXJPcHRpb25zfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5pZH1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIGxhYmVsPVwiRmFjdGlvblwiXG4gICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiRmFjdGlvblwiXG4gICAgICAgICAgICAgIG5hbWU9XCJmYWN0aW9uSWRcIlxuICAgICAgICAgICAgICBjb250cm9sPXtTZWxlY3R9XG4gICAgICAgICAgICAgIG9wdGlvbnM9e2ZhY3Rpb25PcHRpb25zfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5mYWN0aW9uSWR9XG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXt0aGlzLmhhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBsYWJlbD1cIkVuZ2luZVwiXG4gICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiRW5naW5lXCJcbiAgICAgICAgICAgICAgbmFtZT1cImVuZ2luZUlkXCJcbiAgICAgICAgICAgICAgY29udHJvbD17U2VsZWN0fVxuICAgICAgICAgICAgICBvcHRpb25zPXtlbmdpbmVPcHRpb25zfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5lbmdpbmVJZH1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L0Zvcm0uR3JvdXA+XG4gICAgICAgICAgPGRpdiBjc3M9XCJkaXNwbGF5OiBmbGV4OyBmbGV4LXdyYXA6IHdyYXA7IGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcIj5cbiAgICAgICAgICAgIDxoNCBjc3M9XCJmbGV4OiAwIDAgMTAwJTtcIj5TdGFyczwvaDQ+XG4gICAgICAgICAgICB7Z2FtZVN0b3JlLnN0YXJUeXBlcy5tYXAoc3RhclR5cGUgPT4gKFxuICAgICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICAgIGNvbnRyb2w9e0NoZWNrYm94fVxuICAgICAgICAgICAgICAgIGNoZWNrZWQ9e2N1cnJlbnRQbGF5ZXIuc3RhcnMuaW5jbHVkZXMoc3RhclR5cGUuaWQpfVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoKSA9PiB0aGlzLmhhbmRsZUNoZWNrYm94Q2hhbmdlKHN0YXJUeXBlLmlkKX1cbiAgICAgICAgICAgICAgICBsYWJlbD17c3RhclR5cGUudHlwZX1cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9e2Nzc2BcbiAgICAgICAgICAgICAgICAgIG1hcmdpbi1yaWdodDogNXB4ICFpbXBvcnRhbnQ7XG4gICAgICAgICAgICAgICAgYH1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICkpfVxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDxGb3JtLkdyb3VwIHdpZHRocz1cImVxdWFsXCI+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnBvcHVsYXJpdHl9XG4gICAgICAgICAgICAgIGxhYmVsPVwiUG9wdWxhcml0eVwiXG4gICAgICAgICAgICAgIG5hbWU9XCJwb3B1bGFyaXR5XCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtYXg9ezE4fVxuICAgICAgICAgICAgICBtaW49ezB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5wb3dlcn1cbiAgICAgICAgICAgICAgbGFiZWw9XCJQb3dlclwiXG4gICAgICAgICAgICAgIG5hbWU9XCJwb3dlclwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e0lucHV0fVxuICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgbWF4PXsxNn1cbiAgICAgICAgICAgICAgbWluPXswfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXt0aGlzLmhhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgdmFsdWU9e2N1cnJlbnRQbGF5ZXIudGVycml0b3JpZXN9XG4gICAgICAgICAgICAgIGxhYmVsPVwiVGVycml0b3JpZXNcIlxuICAgICAgICAgICAgICBuYW1lPVwidGVycml0b3JpZXNcIlxuICAgICAgICAgICAgICBjb250cm9sPXtJbnB1dH1cbiAgICAgICAgICAgICAgdHlwZT1cIm51bWJlclwiXG4gICAgICAgICAgICAgIG1pbj17MH1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnN0cnVjdHVyZXN9XG4gICAgICAgICAgICAgIGxhYmVsPVwiU3RydWN0dXJlc1wiXG4gICAgICAgICAgICAgIG5hbWU9XCJzdHJ1Y3R1cmVzXCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtYXg9ezl9XG4gICAgICAgICAgICAgIG1pbj17MH1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9Gb3JtLkdyb3VwPlxuICAgICAgICAgIDxGb3JtLkdyb3VwIHdpZHRocz1cImVxdWFsXCI+XG4gICAgICAgICAgICA8Rm9ybS5GaWVsZFxuICAgICAgICAgICAgICBvbkNoYW5nZT17dGhpcy5oYW5kbGVDaGFuZ2V9XG4gICAgICAgICAgICAgIHZhbHVlPXtjdXJyZW50UGxheWVyLnJlc291cmNlc31cbiAgICAgICAgICAgICAgbGFiZWw9XCJSZXNvdXJjZXNcIlxuICAgICAgICAgICAgICBuYW1lPVwicmVzb3VyY2VzXCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtaW49ezB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5nb2xkfVxuICAgICAgICAgICAgICBsYWJlbD1cIkdvbGRcIlxuICAgICAgICAgICAgICBuYW1lPVwiZ29sZFwiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e0lucHV0fVxuICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgbWluPXswfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDxGb3JtLkZpZWxkXG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXt0aGlzLmhhbmRsZUNoYW5nZX1cbiAgICAgICAgICAgICAgdmFsdWU9e2N1cnJlbnRQbGF5ZXIuY29tYmF0Q2FyZHN9XG4gICAgICAgICAgICAgIGxhYmVsPVwiQ29tYmF0IENhcmRzXCJcbiAgICAgICAgICAgICAgbmFtZT1cImNvbWJhdENhcmRzXCJcbiAgICAgICAgICAgICAgY29udHJvbD17SW5wdXR9XG4gICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxuICAgICAgICAgICAgICBtaW49ezB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAgPEZvcm0uRmllbGRcbiAgICAgICAgICAgICAgb25DaGFuZ2U9e3RoaXMuaGFuZGxlQ2hhbmdlfVxuICAgICAgICAgICAgICB2YWx1ZT17Y3VycmVudFBsYXllci5lbmNvdW50ZXJzfVxuICAgICAgICAgICAgICBsYWJlbD1cIkVuY291bnRlcnNcIlxuICAgICAgICAgICAgICBuYW1lPVwiZW5jb3VudGVyc1wiXG4gICAgICAgICAgICAgIGNvbnRyb2w9e0lucHV0fVxuICAgICAgICAgICAgICB0eXBlPVwibnVtYmVyXCJcbiAgICAgICAgICAgICAgbWF4PXsxMX1cbiAgICAgICAgICAgICAgbWluPXswfVxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L0Zvcm0uR3JvdXA+XG4gICAgICAgICAgPEZvcm0uRmllbGQgY29udHJvbD17QnV0dG9ufSBvbkNsaWNrPXt0aGlzLmFkZFBsYXllcn0+XG4gICAgICAgICAgICBBZGQgUGxheWVyXG4gICAgICAgICAgPC9Gb3JtLkZpZWxkPlxuICAgICAgICAgIDxGb3JtLkZpZWxkIGNvbnRyb2w9e0J1dHRvbn0gb25DbGljaz17dGhpcy5zdWJtaXR9PlxuICAgICAgICAgICAgU3VibWl0XG4gICAgICAgICAgPC9Gb3JtLkZpZWxkPlxuICAgICAgICA8L0Zvcm0+XG4gICAgICA8L2Rpdj5cbiAgICApO1xuICB9XG59XG5cbmV4cG9ydCBkZWZhdWx0IFBsYXllckZvcm07XG5cbiJdfQ== */')
-          }))
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+            'div',
+            null,
+            this.renderBattleStars(),
+            this.renderMissionStars()
+          )
         ),
         __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-          __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Group,
+          __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Group,
           { widths: 'equal' },
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             onChange: this.handleChange,
             value: currentPlayer.popularity,
             label: 'Popularity',
             name: 'popularity',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["d" /* Input */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["d" /* Input */],
             type: 'number',
             max: 18,
             min: 0
           }),
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             onChange: this.handleChange,
             value: currentPlayer.power,
             label: 'Power',
             name: 'power',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["d" /* Input */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["d" /* Input */],
             type: 'number',
             max: 16,
             min: 0
           }),
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             onChange: this.handleChange,
             value: currentPlayer.territories,
             label: 'Territories',
             name: 'territories',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["d" /* Input */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["d" /* Input */],
             type: 'number',
             min: 0
           }),
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             onChange: this.handleChange,
             value: currentPlayer.structures,
             label: 'Structures',
             name: 'structures',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["d" /* Input */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["d" /* Input */],
             type: 'number',
             max: 9,
             min: 0
           })
         ),
         __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-          __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Group,
+          __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Group,
           { widths: 'equal' },
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             onChange: this.handleChange,
             value: currentPlayer.resources,
             label: 'Resources',
             name: 'resources',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["d" /* Input */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["d" /* Input */],
             type: 'number',
             min: 0
           }),
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             onChange: this.handleChange,
             value: currentPlayer.gold,
             label: 'Gold',
             name: 'gold',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["d" /* Input */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["d" /* Input */],
             type: 'number',
             min: 0
           }),
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             onChange: this.handleChange,
             value: currentPlayer.combatCards,
             label: 'Combat Cards',
             name: 'combatCards',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["d" /* Input */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["d" /* Input */],
             type: 'number',
             min: 0
           }),
-          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field, {
+          __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field, {
             onChange: this.handleChange,
             value: currentPlayer.encounters,
             label: 'Encounters',
             name: 'encounters',
-            control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["d" /* Input */],
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["d" /* Input */],
             type: 'number',
             max: 11,
             min: 0
           })
         ),
         __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-          __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field,
-          { control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["a" /* Button */], onClick: this.addPlayer },
+          __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field,
+          {
+            control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["a" /* Button */],
+            onClick: this.addPlayer,
+            disabled: gameStore.players.length === 7
+          },
           'Add Player'
         ),
         __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-          __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["c" /* Form */].Field,
-          { control: __WEBPACK_IMPORTED_MODULE_4_semantic_ui_react__["a" /* Button */], onClick: this.submit },
+          __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["c" /* Form */].Field,
+          { control: __WEBPACK_IMPORTED_MODULE_5_semantic_ui_react__["a" /* Button */], onClick: this.submit },
           'Submit'
         )
       )
@@ -107102,6 +107227,733 @@ let PlayerForm = (_dec = Object(__WEBPACK_IMPORTED_MODULE_2_mobx_react__["b" /* 
 
 
 /* harmony default export */ __webpack_exports__["a"] = (PlayerForm);
+
+/***/ }),
+/* 957 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(958);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_styles__ = __webpack_require__(960);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/* eslint prefer-template: 0 */
+
+
+
+
+
+
+var Dropzone = function (_React$Component) {
+  _inherits(Dropzone, _React$Component);
+
+  function Dropzone(props, context) {
+    _classCallCheck(this, Dropzone);
+
+    var _this = _possibleConstructorReturn(this, (Dropzone.__proto__ || Object.getPrototypeOf(Dropzone)).call(this, props, context));
+
+    _this.renderChildren = function (children, isDragActive, isDragAccept, isDragReject) {
+      if (typeof children === 'function') {
+        return children(_extends({}, _this.state, {
+          isDragActive: isDragActive,
+          isDragAccept: isDragAccept,
+          isDragReject: isDragReject
+        }));
+      }
+      return children;
+    };
+
+    _this.composeHandlers = _this.composeHandlers.bind(_this);
+    _this.onClick = _this.onClick.bind(_this);
+    _this.onDocumentDrop = _this.onDocumentDrop.bind(_this);
+    _this.onDragEnter = _this.onDragEnter.bind(_this);
+    _this.onDragLeave = _this.onDragLeave.bind(_this);
+    _this.onDragOver = _this.onDragOver.bind(_this);
+    _this.onDragStart = _this.onDragStart.bind(_this);
+    _this.onDrop = _this.onDrop.bind(_this);
+    _this.onFileDialogCancel = _this.onFileDialogCancel.bind(_this);
+    _this.onInputElementClick = _this.onInputElementClick.bind(_this);
+
+    _this.setRef = _this.setRef.bind(_this);
+    _this.setRefs = _this.setRefs.bind(_this);
+
+    _this.isFileDialogActive = false;
+
+    _this.state = {
+      draggedFiles: [],
+      acceptedFiles: [],
+      rejectedFiles: []
+    };
+    return _this;
+  }
+
+  _createClass(Dropzone, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var preventDropOnDocument = this.props.preventDropOnDocument;
+
+      this.dragTargets = [];
+
+      if (preventDropOnDocument) {
+        document.addEventListener('dragover', __WEBPACK_IMPORTED_MODULE_2__utils__["e" /* onDocumentDragOver */], false);
+        document.addEventListener('drop', this.onDocumentDrop, false);
+      }
+      this.fileInputEl.addEventListener('click', this.onInputElementClick, false);
+      // Tried implementing addEventListener, but didn't work out
+      document.body.onfocus = this.onFileDialogCancel;
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      var preventDropOnDocument = this.props.preventDropOnDocument;
+
+      if (preventDropOnDocument) {
+        document.removeEventListener('dragover', __WEBPACK_IMPORTED_MODULE_2__utils__["e" /* onDocumentDragOver */]);
+        document.removeEventListener('drop', this.onDocumentDrop);
+      }
+      if (this.fileInputEl != null) {
+        this.fileInputEl.removeEventListener('click', this.onInputElementClick, false);
+      }
+      // Can be replaced with removeEventListener, if addEventListener works
+      if (document != null) {
+        document.body.onfocus = null;
+      }
+    }
+  }, {
+    key: 'composeHandlers',
+    value: function composeHandlers(handler) {
+      if (this.props.disabled) {
+        return null;
+      }
+
+      return handler;
+    }
+  }, {
+    key: 'onDocumentDrop',
+    value: function onDocumentDrop(evt) {
+      if (this.node && this.node.contains(evt.target)) {
+        // if we intercepted an event for our instance, let it propagate down to the instance's onDrop handler
+        return;
+      }
+      evt.preventDefault();
+      this.dragTargets = [];
+    }
+  }, {
+    key: 'onDragStart',
+    value: function onDragStart(evt) {
+      if (this.props.onDragStart) {
+        this.props.onDragStart.call(this, evt);
+      }
+    }
+  }, {
+    key: 'onDragEnter',
+    value: function onDragEnter(evt) {
+      evt.preventDefault();
+
+      // Count the dropzone and any children that are entered.
+      if (this.dragTargets.indexOf(evt.target) === -1) {
+        this.dragTargets.push(evt.target);
+      }
+
+      this.setState({
+        isDragActive: true, // Do not rely on files for the drag state. It doesn't work in Safari.
+        draggedFiles: Object(__WEBPACK_IMPORTED_MODULE_2__utils__["d" /* getDataTransferItems */])(evt)
+      });
+
+      if (this.props.onDragEnter) {
+        this.props.onDragEnter.call(this, evt);
+      }
+    }
+  }, {
+    key: 'onDragOver',
+    value: function onDragOver(evt) {
+      // eslint-disable-line class-methods-use-this
+      evt.preventDefault();
+      evt.stopPropagation();
+      try {
+        // The file dialog on Chrome allows users to drag files from the dialog onto
+        // the dropzone, causing the browser the crash when the file dialog is closed.
+        // A drop effect of 'none' prevents the file from being dropped
+        evt.dataTransfer.dropEffect = this.isFileDialogActive ? 'none' : 'copy'; // eslint-disable-line no-param-reassign
+      } catch (err) {
+        // continue regardless of error
+      }
+
+      if (this.props.onDragOver) {
+        this.props.onDragOver.call(this, evt);
+      }
+      return false;
+    }
+  }, {
+    key: 'onDragLeave',
+    value: function onDragLeave(evt) {
+      var _this2 = this;
+
+      evt.preventDefault();
+
+      // Only deactivate once the dropzone and all children have been left.
+      this.dragTargets = this.dragTargets.filter(function (el) {
+        return el !== evt.target && _this2.node.contains(el);
+      });
+      if (this.dragTargets.length > 0) {
+        return;
+      }
+
+      // Clear dragging files state
+      this.setState({
+        isDragActive: false,
+        draggedFiles: []
+      });
+
+      if (this.props.onDragLeave) {
+        this.props.onDragLeave.call(this, evt);
+      }
+    }
+  }, {
+    key: 'onDrop',
+    value: function onDrop(evt) {
+      var _this3 = this;
+
+      var _props = this.props,
+          onDrop = _props.onDrop,
+          onDropAccepted = _props.onDropAccepted,
+          onDropRejected = _props.onDropRejected,
+          multiple = _props.multiple,
+          disablePreview = _props.disablePreview,
+          accept = _props.accept;
+
+      var fileList = Object(__WEBPACK_IMPORTED_MODULE_2__utils__["d" /* getDataTransferItems */])(evt);
+      var acceptedFiles = [];
+      var rejectedFiles = [];
+
+      // Stop default browser behavior
+      evt.preventDefault();
+
+      // Reset the counter along with the drag on a drop.
+      this.dragTargets = [];
+      this.isFileDialogActive = false;
+
+      fileList.forEach(function (file) {
+        if (!disablePreview) {
+          try {
+            file.preview = window.URL.createObjectURL(file); // eslint-disable-line no-param-reassign
+          } catch (err) {
+            if (process.env.NODE_ENV !== 'production') {
+              console.error('Failed to generate preview for file', file, err); // eslint-disable-line no-console
+            }
+          }
+        }
+
+        if (Object(__WEBPACK_IMPORTED_MODULE_2__utils__["b" /* fileAccepted */])(file, accept) && Object(__WEBPACK_IMPORTED_MODULE_2__utils__["c" /* fileMatchSize */])(file, _this3.props.maxSize, _this3.props.minSize)) {
+          acceptedFiles.push(file);
+        } else {
+          rejectedFiles.push(file);
+        }
+      });
+
+      if (!multiple) {
+        // if not in multi mode add any extra accepted files to rejected.
+        // This will allow end users to easily ignore a multi file drop in "single" mode.
+        rejectedFiles.push.apply(rejectedFiles, _toConsumableArray(acceptedFiles.splice(1)));
+      }
+
+      if (onDrop) {
+        onDrop.call(this, acceptedFiles, rejectedFiles, evt);
+      }
+
+      if (rejectedFiles.length > 0 && onDropRejected) {
+        onDropRejected.call(this, rejectedFiles, evt);
+      }
+
+      if (acceptedFiles.length > 0 && onDropAccepted) {
+        onDropAccepted.call(this, acceptedFiles, evt);
+      }
+
+      // Clear files value
+      this.draggedFiles = null;
+
+      // Reset drag state
+      this.setState({
+        isDragActive: false,
+        draggedFiles: [],
+        acceptedFiles: acceptedFiles,
+        rejectedFiles: rejectedFiles
+      });
+    }
+  }, {
+    key: 'onClick',
+    value: function onClick(evt) {
+      var _props2 = this.props,
+          onClick = _props2.onClick,
+          disableClick = _props2.disableClick;
+
+      if (!disableClick) {
+        evt.stopPropagation();
+
+        if (onClick) {
+          onClick.call(this, evt);
+        }
+
+        // in IE11/Edge the file-browser dialog is blocking, ensure this is behind setTimeout
+        // this is so react can handle state changes in the onClick prop above above
+        // see: https://github.com/react-dropzone/react-dropzone/issues/450
+        setTimeout(this.open.bind(this), 0);
+      }
+    }
+  }, {
+    key: 'onInputElementClick',
+    value: function onInputElementClick(evt) {
+      evt.stopPropagation();
+      if (this.props.inputProps && this.props.inputProps.onClick) {
+        this.props.inputProps.onClick();
+      }
+    }
+  }, {
+    key: 'onFileDialogCancel',
+    value: function onFileDialogCancel() {
+      var _this4 = this;
+
+      // timeout will not recognize context of this method
+      var onFileDialogCancel = this.props.onFileDialogCancel;
+      // execute the timeout only if the FileDialog is opened in the browser
+
+      if (this.isFileDialogActive) {
+        setTimeout(function () {
+          // Returns an object as FileList
+          var files = _this4.fileInputEl.files;
+
+
+          if (!files.length) {
+            _this4.isFileDialogActive = false;
+          }
+
+          if (typeof onFileDialogCancel === 'function') {
+            onFileDialogCancel();
+          }
+        }, 300);
+      }
+    }
+  }, {
+    key: 'setRef',
+    value: function setRef(ref) {
+      this.node = ref;
+    }
+  }, {
+    key: 'setRefs',
+    value: function setRefs(ref) {
+      this.fileInputEl = ref;
+    }
+    /**
+     * Open system file upload dialog.
+     *
+     * @public
+     */
+
+  }, {
+    key: 'open',
+    value: function open() {
+      this.isFileDialogActive = true;
+      this.fileInputEl.value = null;
+      this.fileInputEl.click();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props3 = this.props,
+          accept = _props3.accept,
+          acceptClassName = _props3.acceptClassName,
+          activeClassName = _props3.activeClassName,
+          children = _props3.children,
+          disabled = _props3.disabled,
+          disabledClassName = _props3.disabledClassName,
+          inputProps = _props3.inputProps,
+          multiple = _props3.multiple,
+          name = _props3.name,
+          rejectClassName = _props3.rejectClassName,
+          rest = _objectWithoutProperties(_props3, ['accept', 'acceptClassName', 'activeClassName', 'children', 'disabled', 'disabledClassName', 'inputProps', 'multiple', 'name', 'rejectClassName']);
+
+      var acceptStyle = rest.acceptStyle,
+          activeStyle = rest.activeStyle,
+          _rest$className = rest.className,
+          className = _rest$className === undefined ? '' : _rest$className,
+          disabledStyle = rest.disabledStyle,
+          rejectStyle = rest.rejectStyle,
+          style = rest.style,
+          props = _objectWithoutProperties(rest, ['acceptStyle', 'activeStyle', 'className', 'disabledStyle', 'rejectStyle', 'style']);
+
+      var _state = this.state,
+          isDragActive = _state.isDragActive,
+          draggedFiles = _state.draggedFiles;
+
+      var filesCount = draggedFiles.length;
+      var isMultipleAllowed = multiple || filesCount <= 1;
+      var isDragAccept = filesCount > 0 && Object(__WEBPACK_IMPORTED_MODULE_2__utils__["a" /* allFilesAccepted */])(draggedFiles, this.props.accept);
+      var isDragReject = filesCount > 0 && (!isDragAccept || !isMultipleAllowed);
+      var noStyles = !className && !style && !activeStyle && !acceptStyle && !rejectStyle && !disabledStyle;
+
+      if (isDragActive && activeClassName) {
+        className += ' ' + activeClassName;
+      }
+      if (isDragAccept && acceptClassName) {
+        className += ' ' + acceptClassName;
+      }
+      if (isDragReject && rejectClassName) {
+        className += ' ' + rejectClassName;
+      }
+      if (disabled && disabledClassName) {
+        className += ' ' + disabledClassName;
+      }
+
+      if (noStyles) {
+        style = __WEBPACK_IMPORTED_MODULE_3__utils_styles__["a" /* default */].default;
+        activeStyle = __WEBPACK_IMPORTED_MODULE_3__utils_styles__["a" /* default */].active;
+        acceptStyle = style.active;
+        rejectStyle = __WEBPACK_IMPORTED_MODULE_3__utils_styles__["a" /* default */].rejected;
+        disabledStyle = __WEBPACK_IMPORTED_MODULE_3__utils_styles__["a" /* default */].disabled;
+      }
+
+      var appliedStyle = _extends({}, style);
+      if (activeStyle && isDragActive) {
+        appliedStyle = _extends({}, style, activeStyle);
+      }
+      if (acceptStyle && isDragAccept) {
+        appliedStyle = _extends({}, appliedStyle, acceptStyle);
+      }
+      if (rejectStyle && isDragReject) {
+        appliedStyle = _extends({}, appliedStyle, rejectStyle);
+      }
+      if (disabledStyle && disabled) {
+        appliedStyle = _extends({}, style, disabledStyle);
+      }
+
+      var inputAttributes = {
+        accept: accept,
+        disabled: disabled,
+        type: 'file',
+        style: { display: 'none' },
+        multiple: __WEBPACK_IMPORTED_MODULE_2__utils__["f" /* supportMultiple */] && multiple,
+        ref: this.setRefs,
+        onChange: this.onDrop,
+        autoComplete: 'off'
+      };
+
+      if (name && name.length) {
+        inputAttributes.name = name;
+      }
+
+      // Destructure custom props away from props used for the div element
+
+      var acceptedFiles = props.acceptedFiles,
+          preventDropOnDocument = props.preventDropOnDocument,
+          disablePreview = props.disablePreview,
+          disableClick = props.disableClick,
+          onDropAccepted = props.onDropAccepted,
+          onDropRejected = props.onDropRejected,
+          onFileDialogCancel = props.onFileDialogCancel,
+          maxSize = props.maxSize,
+          minSize = props.minSize,
+          divProps = _objectWithoutProperties(props, ['acceptedFiles', 'preventDropOnDocument', 'disablePreview', 'disableClick', 'onDropAccepted', 'onDropRejected', 'onFileDialogCancel', 'maxSize', 'minSize']);
+
+      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'div',
+        _extends({
+          className: className,
+          style: appliedStyle
+        }, divProps /* expand user provided props first so event handlers are never overridden */, {
+          onClick: this.composeHandlers(this.onClick),
+          onDragStart: this.composeHandlers(this.onDragStart),
+          onDragEnter: this.composeHandlers(this.onDragEnter),
+          onDragOver: this.composeHandlers(this.onDragOver),
+          onDragLeave: this.composeHandlers(this.onDragLeave),
+          onDrop: this.composeHandlers(this.onDrop),
+          ref: this.setRef,
+          'aria-disabled': disabled
+        }),
+        this.renderChildren(children, isDragActive, isDragAccept, isDragReject),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', _extends({}, inputProps /* expand user provided inputProps first so inputAttributes override them */, inputAttributes))
+      );
+    }
+  }]);
+
+  return Dropzone;
+}(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+
+/* unused harmony default export */ var _unused_webpack_default_export = (Dropzone);
+
+Dropzone.propTypes = {
+  /**
+   * Allow specific types of files. See https://github.com/okonet/attr-accept for more information.
+   * Keep in mind that mime type determination is not reliable across platforms. CSV files,
+   * for example, are reported as text/plain under macOS but as application/vnd.ms-excel under
+   * Windows. In some cases there might not be a mime type set at all.
+   * See: https://github.com/react-dropzone/react-dropzone/issues/276
+   */
+  accept: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+
+  /**
+   * Contents of the dropzone
+   */
+  children: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.oneOfType([__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.node, __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func]),
+
+  /**
+   * Disallow clicking on the dropzone container to open file dialog
+   */
+  disableClick: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+
+  /**
+  * Enable/disable the dropzone entirely
+  */
+  disabled: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+
+  /**
+   * Enable/disable preview generation
+   */
+  disablePreview: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+
+  /**
+   * If false, allow dropped items to take over the current browser window
+   */
+  preventDropOnDocument: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+
+  /**
+   * Pass additional attributes to the `<input type="file"/>` tag
+   */
+  inputProps: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
+
+  /**
+   * Allow dropping multiple files
+   */
+  multiple: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+
+  /**
+   * `name` attribute for the input tag
+   */
+  name: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+
+  /**
+   * Maximum file size
+   */
+  maxSize: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
+
+  /**
+   * Minimum file size
+   */
+  minSize: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
+
+  /**
+   * className
+   */
+  className: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+
+  /**
+   * className for active state
+   */
+  activeClassName: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+
+  /**
+   * className for accepted state
+   */
+  acceptClassName: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+
+  /**
+   * className for rejected state
+   */
+  rejectClassName: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+
+  /**
+   * className for disabled state
+   */
+  disabledClassName: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+
+  /**
+   * CSS styles to apply
+   */
+  style: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
+
+  /**
+   * CSS styles to apply when drag is active
+   */
+  activeStyle: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
+
+  /**
+   * CSS styles to apply when drop will be accepted
+   */
+  acceptStyle: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
+
+  /**
+   * CSS styles to apply when drop will be rejected
+   */
+  rejectStyle: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
+
+  /**
+   * CSS styles to apply when dropzone is disabled
+   */
+  disabledStyle: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.object,
+
+  /**
+   * onClick callback
+   * @param {Event} event
+   */
+  onClick: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+
+  /**
+   * onDrop callback
+   */
+  onDrop: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+
+  /**
+   * onDropAccepted callback
+   */
+  onDropAccepted: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+
+  /**
+   * onDropRejected callback
+   */
+  onDropRejected: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+
+  /**
+   * onDragStart callback
+   */
+  onDragStart: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+
+  /**
+   * onDragEnter callback
+   */
+  onDragEnter: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+
+  /**
+   * onDragOver callback
+   */
+  onDragOver: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+
+  /**
+   * onDragLeave callback
+   */
+  onDragLeave: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+
+  /**
+   * Provide a callback on clicking the cancel button of the file dialog
+   */
+  onFileDialogCancel: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+};
+
+Dropzone.defaultProps = {
+  preventDropOnDocument: true,
+  disabled: false,
+  disablePreview: false,
+  disableClick: false,
+  multiple: true,
+  maxSize: Infinity,
+  minSize: 0
+};
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
+
+/***/ }),
+/* 958 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return supportMultiple; });
+/* harmony export (immutable) */ __webpack_exports__["d"] = getDataTransferItems;
+/* harmony export (immutable) */ __webpack_exports__["b"] = fileAccepted;
+/* harmony export (immutable) */ __webpack_exports__["c"] = fileMatchSize;
+/* harmony export (immutable) */ __webpack_exports__["a"] = allFilesAccepted;
+/* harmony export (immutable) */ __webpack_exports__["e"] = onDocumentDragOver;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_attr_accept__ = __webpack_require__(959);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_attr_accept___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_attr_accept__);
+
+
+var supportMultiple = typeof document !== 'undefined' && document && document.createElement ? 'multiple' in document.createElement('input') : true;
+
+function getDataTransferItems(event) {
+  var dataTransferItemsList = [];
+  if (event.dataTransfer) {
+    var dt = event.dataTransfer;
+    if (dt.files && dt.files.length) {
+      dataTransferItemsList = dt.files;
+    } else if (dt.items && dt.items.length) {
+      // During the drag even the dataTransfer.files is null
+      // but Chrome implements some drag store, which is accesible via dataTransfer.items
+      dataTransferItemsList = dt.items;
+    }
+  } else if (event.target && event.target.files) {
+    dataTransferItemsList = event.target.files;
+  }
+  // Convert from DataTransferItemsList to the native Array
+  return Array.prototype.slice.call(dataTransferItemsList);
+}
+
+// Firefox versions prior to 53 return a bogus MIME type for every file drag, so dragovers with
+// that MIME type will always be accepted
+function fileAccepted(file, accept) {
+  return file.type === 'application/x-moz-file' || __WEBPACK_IMPORTED_MODULE_0_attr_accept___default()(file, accept);
+}
+
+function fileMatchSize(file, maxSize, minSize) {
+  return file.size <= maxSize && file.size >= minSize;
+}
+
+function allFilesAccepted(files, accept) {
+  return files.every(function (file) {
+    return fileAccepted(file, accept);
+  });
+}
+
+// allow the entire document to be a drag target
+function onDocumentDragOver(evt) {
+  evt.preventDefault();
+}
+
+/***/ }),
+/* 959 */
+/***/ (function(module, exports) {
+
+module.exports=function(t){function n(e){if(r[e])return r[e].exports;var o=r[e]={exports:{},id:e,loaded:!1};return t[e].call(o.exports,o,o.exports,n),o.loaded=!0,o.exports}var r={};return n.m=t,n.c=r,n.p="",n(0)}([function(t,n,r){"use strict";n.__esModule=!0,r(8),r(9),n["default"]=function(t,n){if(t&&n){var r=function(){var r=Array.isArray(n)?n:n.split(","),e=t.name||"",o=t.type||"",i=o.replace(/\/.*$/,"");return{v:r.some(function(t){var n=t.trim();return"."===n.charAt(0)?e.toLowerCase().endsWith(n.toLowerCase()):/\/\*$/.test(n)?i===n.replace(/\/.*$/,""):o===n})}}();if("object"==typeof r)return r.v}return!0},t.exports=n["default"]},function(t,n){var r=t.exports={version:"1.2.2"};"number"==typeof __e&&(__e=r)},function(t,n){var r=t.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=r)},function(t,n,r){var e=r(2),o=r(1),i=r(4),u=r(19),c="prototype",f=function(t,n){return function(){return t.apply(n,arguments)}},s=function(t,n,r){var a,p,l,y,d=t&s.G,h=t&s.P,v=d?e:t&s.S?e[n]||(e[n]={}):(e[n]||{})[c],x=d?o:o[n]||(o[n]={});d&&(r=n);for(a in r)p=!(t&s.F)&&v&&a in v,l=(p?v:r)[a],y=t&s.B&&p?f(l,e):h&&"function"==typeof l?f(Function.call,l):l,v&&!p&&u(v,a,l),x[a]!=l&&i(x,a,y),h&&((x[c]||(x[c]={}))[a]=l)};e.core=o,s.F=1,s.G=2,s.S=4,s.P=8,s.B=16,s.W=32,t.exports=s},function(t,n,r){var e=r(5),o=r(18);t.exports=r(22)?function(t,n,r){return e.setDesc(t,n,o(1,r))}:function(t,n,r){return t[n]=r,t}},function(t,n){var r=Object;t.exports={create:r.create,getProto:r.getPrototypeOf,isEnum:{}.propertyIsEnumerable,getDesc:r.getOwnPropertyDescriptor,setDesc:r.defineProperty,setDescs:r.defineProperties,getKeys:r.keys,getNames:r.getOwnPropertyNames,getSymbols:r.getOwnPropertySymbols,each:[].forEach}},function(t,n){var r=0,e=Math.random();t.exports=function(t){return"Symbol(".concat(void 0===t?"":t,")_",(++r+e).toString(36))}},function(t,n,r){var e=r(20)("wks"),o=r(2).Symbol;t.exports=function(t){return e[t]||(e[t]=o&&o[t]||(o||r(6))("Symbol."+t))}},function(t,n,r){r(26),t.exports=r(1).Array.some},function(t,n,r){r(25),t.exports=r(1).String.endsWith},function(t,n){t.exports=function(t){if("function"!=typeof t)throw TypeError(t+" is not a function!");return t}},function(t,n){var r={}.toString;t.exports=function(t){return r.call(t).slice(8,-1)}},function(t,n,r){var e=r(10);t.exports=function(t,n,r){if(e(t),void 0===n)return t;switch(r){case 1:return function(r){return t.call(n,r)};case 2:return function(r,e){return t.call(n,r,e)};case 3:return function(r,e,o){return t.call(n,r,e,o)}}return function(){return t.apply(n,arguments)}}},function(t,n){t.exports=function(t){if(void 0==t)throw TypeError("Can't call method on  "+t);return t}},function(t,n,r){t.exports=function(t){var n=/./;try{"/./"[t](n)}catch(e){try{return n[r(7)("match")]=!1,!"/./"[t](n)}catch(o){}}return!0}},function(t,n){t.exports=function(t){try{return!!t()}catch(n){return!0}}},function(t,n){t.exports=function(t){return"object"==typeof t?null!==t:"function"==typeof t}},function(t,n,r){var e=r(16),o=r(11),i=r(7)("match");t.exports=function(t){var n;return e(t)&&(void 0!==(n=t[i])?!!n:"RegExp"==o(t))}},function(t,n){t.exports=function(t,n){return{enumerable:!(1&t),configurable:!(2&t),writable:!(4&t),value:n}}},function(t,n,r){var e=r(2),o=r(4),i=r(6)("src"),u="toString",c=Function[u],f=(""+c).split(u);r(1).inspectSource=function(t){return c.call(t)},(t.exports=function(t,n,r,u){"function"==typeof r&&(o(r,i,t[n]?""+t[n]:f.join(String(n))),"name"in r||(r.name=n)),t===e?t[n]=r:(u||delete t[n],o(t,n,r))})(Function.prototype,u,function(){return"function"==typeof this&&this[i]||c.call(this)})},function(t,n,r){var e=r(2),o="__core-js_shared__",i=e[o]||(e[o]={});t.exports=function(t){return i[t]||(i[t]={})}},function(t,n,r){var e=r(17),o=r(13);t.exports=function(t,n,r){if(e(n))throw TypeError("String#"+r+" doesn't accept regex!");return String(o(t))}},function(t,n,r){t.exports=!r(15)(function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a})},function(t,n){var r=Math.ceil,e=Math.floor;t.exports=function(t){return isNaN(t=+t)?0:(t>0?e:r)(t)}},function(t,n,r){var e=r(23),o=Math.min;t.exports=function(t){return t>0?o(e(t),9007199254740991):0}},function(t,n,r){"use strict";var e=r(3),o=r(24),i=r(21),u="endsWith",c=""[u];e(e.P+e.F*r(14)(u),"String",{endsWith:function(t){var n=i(this,t,u),r=arguments,e=r.length>1?r[1]:void 0,f=o(n.length),s=void 0===e?f:Math.min(o(e),f),a=String(t);return c?c.call(n,a,s):n.slice(s-a.length,s)===a}})},function(t,n,r){var e=r(5),o=r(3),i=r(1).Array||Array,u={},c=function(t,n){e.each.call(t.split(","),function(t){void 0==n&&t in i?u[t]=i[t]:t in[]&&(u[t]=r(12)(Function.call,[][t],n))})};c("pop,reverse,shift,keys,values,entries",1),c("indexOf,every,some,forEach,map,filter,find,findIndex,includes",3),c("join,slice,concat,push,splice,unshift,sort,lastIndexOf,reduce,reduceRight,copyWithin,fill"),o(o.S,"Array",u)}]);
+
+/***/ }),
+/* 960 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+  rejected: {
+    borderStyle: 'solid',
+    borderColor: '#c66',
+    backgroundColor: '#eee'
+  },
+  disabled: {
+    opacity: 0.5
+  },
+  active: {
+    borderStyle: 'solid',
+    borderColor: '#6c6',
+    backgroundColor: '#eee'
+  },
+  default: {
+    width: 200,
+    height: 200,
+    borderWidth: 2,
+    borderColor: '#666',
+    borderStyle: 'dashed',
+    borderRadius: 5
+  }
+});
 
 /***/ })
 /******/ ]);

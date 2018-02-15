@@ -9,6 +9,7 @@ import FactionModel from 'js/models/faction';
 
 class GameStore {
   @observable currentGame;
+  @observable hasLoaded = false;
   @observable engines = [];
   @observable factions = [];
   @observable users = [];
@@ -25,7 +26,45 @@ class GameStore {
       star_types.map(starType =>
         this.starTypes.push(new StarTypeModel(starType))
       );
+      this.hasLoaded = true;
     });
+  }
+
+  @computed
+  get battleStars() {
+    return this.starTypes.filter(
+      starType => starType.id === 7 || starType.id === 8
+    );
+  }
+
+  @computed
+  get missionStar() {
+    return this.starTypes.find(starType => starType.id === 6);
+  }
+
+  @computed
+  get singleStarTypes() {
+    return this.starTypes.filter(
+      starType => starType.id !== 6 && starType.id !== 7
+    );
+  }
+
+  @computed
+  get remainingEngines() {
+    const usedEngines = this.players.map(p => p.engineId);
+    return this.engines.filter(engine => !usedEngines.includes(engine.id));
+  }
+
+  @computed
+  get remainingFactions() {
+    const usedFactions = this.players.map(p => p.factionId);
+    return this.factions.filter(faction => !usedFactions.includes(faction.id));
+  }
+
+  @computed
+  get remainingUsers() {
+    const usedUsers = this.players.map(p => p.id);
+    return this.users.filter(user => !usedUsers.includes(user.id));
   }
 
   @action
@@ -38,7 +77,7 @@ class GameStore {
   }
 
   @action
-  submitGame() {
+  submitGame(dataObj) {
     const data = this.currentGame;
     axios.post(Urls.games, data).then(res => console.log(res));
   }

@@ -39,26 +39,21 @@ class StarTypeSeeder extends Seeder
 
         StarType::updateOrCreate(
           ['id' => 6],
-          ['type' => '1 Mission Card']
+          ['type' => 'Mission Card']
         );
 
         StarType::updateOrCreate(
           ['id' => 7],
-          ['type' => '1 Battle']
+          ['type' => 'Battle Victory']
         );
 
         StarType::updateOrCreate(
           ['id' => 8],
-          ['type' => '1 Battle']
-        );
-
-        StarType::updateOrCreate(
-          ['id' => 9],
           ['type' => '18 Popularity']
         );
 
         StarType::updateOrCreate(
-          ['id' => 10],
+          ['id' => 9],
           ['type' => '16 Power']
         );
     }
