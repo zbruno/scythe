@@ -218,6 +218,10 @@ class PlayerForm extends React.Component {
             />
           </Form.Group>
           <Form.Group widths="equal" className={css`margin: 15px 0; padding: 10px 0; border-top: 1px solid; border-bottom: 1px solid;`}>
+            <div>
+              {this.renderBattleStars()}
+              {this.renderMissionStars()}
+            </div>
             <div css="display: flex; flex-wrap: wrap; justify-content: flex-start;">
               <h4 css="flex: 0 0 100%;">Stars</h4>
               {gameStore.singleStarTypes.map(starType => (
@@ -232,10 +236,6 @@ class PlayerForm extends React.Component {
                   `}
                 />
               ))}
-            </div>
-            <div>
-              {this.renderBattleStars()}
-              {this.renderMissionStars()}
             </div>
           </Form.Group>
           <Form.Group widths="equal">
@@ -334,6 +334,7 @@ class PlayerForm extends React.Component {
             control={Button}
             onClick={this.addPlayer}
             disabled={gameStore.players.length === 7}
+            color="red"
           >
             Add Player
           </Form.Field>

@@ -71,7 +71,7 @@ class GameController extends Controller
 
 
         return response([
-            'game' => Game::with('game_user', 'game_user_star_type')->get()
+            'game' => Game::with(['game_user', 'game_user_star_type'])->get()
         ], 200);
     }
 }

@@ -10,12 +10,28 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+      WebFont.load({
+        google: {"families":["Montserrat:300,400,500,600,700","Roboto:300,400,500,600,700"]},
+        active: function() {
+            sessionStorage.fonts = true;
+        }
+      });
+    </script>
+
+    <link href="/css/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="/css/vendors.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.bundle.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
-    <div id="app">
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--fixed m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+    <div id="app" class="m-grid m-grid--hor m-grid--root m-page">
         @yield('content')
     </div>
+
+    <script src="/js/vendors.bundle.js" type="text/javascript"></script>
+    <script src="/js/scripts.bundle.js" type="text/javascript"></script>
+    <script src="/js/fullcalendar.bundle.js" type="text/javascript"></script>
+    {{-- <script src="assets/app/js/dashboard.js" type="text/javascript"></script> --}}
 </body>
 </html>
